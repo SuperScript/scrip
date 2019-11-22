@@ -1,1 +1,1 @@
-shout() { echo "#TARGET#: $*" >&2; }
+shout() { echo "$0: $*" >&2; }
