@@ -1,0 +1,2 @@
+
+The processed result would include `defaults.sh` only once (the first time it's encountered), preventing duplication:

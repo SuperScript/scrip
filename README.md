@@ -4,6 +4,14 @@ This repository contains scripts that have proven useful over time, and routines
 
 Script inclusion is indicated by a line of the form `#include filename`. In the initial version this is the only form. In future versions additional comment conventions may be added.
 
-# AI Describe a program that resolves these include statements recursively
-# AI Indicate that the actual file content is included only for the first statement encountered that includes the file.
-# AI! Extend this description with some simple examples.
+## Include Resolution
+
+The scrip system provides a program that processes include statements recursively. When it encounters a line containing `#include filename`, it replaces that line with the entire contents of the specified file. If the included file itself contains include statements, those are resolved recursively as well.
+
+To prevent infinite loops and duplicate code, each file is included only once - the first time an include statement for that file is encountered. Subsequent include statements for the same file are ignored.
+
+## Examples
+
+### Basic Include
+
+If you have a main script `main.sh`:
