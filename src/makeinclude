@@ -14,15 +14,15 @@ function barf(msg) { shout("fatal: " msg); exit 111; }
 function findfile(fname,  path,dirs,i,fullpath,cmd) {
   # If fname contains a slash or starts with ./, use as-is
   if (fname ~ /[\/]/ || fname ~ /^\.\//) return fname
-  
+
   # Get search path from environment
   cmd = "echo \"$MAKEINCLUDE_PATH\""
   cmd | getline path
   close(cmd)
-  
+
   # If no path set, use current directory
   if (!path) return fname
-  
+
   # Split path and search each directory
   split(path, dirs, ":")
   for (i in dirs) {
@@ -33,7 +33,7 @@ function findfile(fname,  path,dirs,i,fullpath,cmd) {
       return fullpath
     }
   }
-  
+
   # Fall back to original name
   return fname
 }
@@ -43,7 +43,7 @@ function dofile(fname,  i,x,a,realfname) {
 
   # Find the actual file path
   realfname = findfile(fname)
-  
+
   # Print name for deps mode
   if (deps) print realfname
   included[fname] = 1
