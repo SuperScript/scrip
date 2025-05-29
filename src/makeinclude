@@ -11,23 +11,52 @@ awk=`{ which gawk >/dev/null && echo gawk; } \
 exec $awk '
 function shout(msg) { print "makeinclude: " msg | "cat - 1>&2"; }
 function barf(msg) { shout("fatal: " msg); exit 111; }
-function dofile(fname,  i,x,a) {
+function findfile(fname,  path,dirs,i,fullpath,cmd) {
+  # If fname contains a slash or starts with ./, use as-is
+  if (fname ~ /[\/]/ || fname ~ /^\.\//) return fname
+  
+  # Get search path from environment
+  cmd = "echo \"$MAKEINCLUDE_PATH\""
+  cmd | getline path
+  close(cmd)
+  
+  # If no path set, use current directory
+  if (!path) return fname
+  
+  # Split path and search each directory
+  split(path, dirs, ":")
+  for (i in dirs) {
+    if (dirs[i] == "") continue
+    fullpath = dirs[i] "/" fname
+    if ((getline < fullpath) >= 0) {
+      close(fullpath)
+      return fullpath
+    }
+  }
+  
+  # Fall back to original name
+  return fname
+}
+function dofile(fname,  i,x,a,realfname) {
   # Skip if file was seen already
   if (1 == included[fname]) return
 
+  # Find the actual file path
+  realfname = findfile(fname)
+  
   # Print name for deps mode
-  if (deps) print fname
+  if (deps) print realfname
   included[fname] = 1
 
   # Nest into dependency
   i = 0
   while (1) {
-    r = getline x <fname
-    if (0 > r) barf("cannot open file: " fname)
+    r = getline x <realfname
+    if (0 > r) barf("cannot open file: " realfname)
     if (0 == r) break
     line[i++,fname] = x;
   }
-  close(fname)
+  close(realfname)
   lim[fname] = i
 
   # Process nested includes
