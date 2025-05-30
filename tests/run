@@ -1,0 +1,48 @@
+#!/bin/sh
+
+home="$(pwd)"
+_sort="env LC_ALL=POSIX sort"
+
+PATH="${home}/src:$PATH"
+export PATH
+
+####
+
+# _silence prog
+_silence() {
+  "$@" >/dev/null 2>&1
+}
+
+# _sanitize < input > output
+_sanitize() {
+  sed \
+    -e "s!${home}!...!"g
+}
+
+# _check prog
+_check() {
+  { "$@" 2>&1 ; echo $?; } | _sanitize
+}
+
+# _check_err prog
+_check_err() {
+  { "$@" 2>&1 >/dev/null ; echo $?; } | grep -E 'fatal:|(^[0-9]+)' | _sanitize
+}
+
+# _check_sort prog
+_check_sort() {
+  _check "$@" | ${_sort}
+}
+
+# _run headline
+_run() {
+  printf '\n\n#### %s\n\n' "$1"
+}
+
+####
+
+cd tests
+
+
+exit 0
+
