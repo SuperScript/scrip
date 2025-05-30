@@ -1,0 +1,19 @@
+
+
+#### scrip offers help
+
+  scrip mode file...
+ 
+    help
+      Print this helpful message
+ 
+    deps file...
+      Print the list of included file paths
+      Path is printed only the first time encountered
+      Paths are sorted by order of encounter
+ 
+    code file...
+      Print the code in files, resolving includes
+      Includes are inserted only the first time encountered
+ 
+0

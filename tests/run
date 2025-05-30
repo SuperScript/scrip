@@ -6,6 +6,8 @@ _sort="env LC_ALL=POSIX sort"
 PATH="${home}/src:$PATH"
 export PATH
 
+scrip=scrip
+
 ####
 
 # _silence prog
@@ -43,6 +45,8 @@ _run() {
 
 cd tests
 
+_run 'scrip offers help'
+_check ${scrip} help
 
 exit 0
 
