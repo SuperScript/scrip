@@ -34,9 +34,21 @@
 0
 
 
+#### shout.awk prints message to stderr
+
+scrip: test message
+0
+
+
 #### barf prints fatal message and exits with 111
 
 .../tests/basedir/barf_test: fatal: test error
+111
+
+
+#### barf.awk prints fatal message and exits with 111
+
+scrip: fatal: test error
 111
 
 

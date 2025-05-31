@@ -71,6 +71,15 @@ EOF
 env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/shout_test.sh" > "${basedir}/shout_test"
 _check sh "${basedir}/shout_test"
 
+_run 'shout.awk prints message to stderr'
+cat - > "${basedir}/shout_awk_test.awk" <<'EOF'
+#include "shout.awk"
+BEGIN { shout("test message"); }
+EOF
+
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/shout_awk_test.awk" > "${basedir}/shout_awk_test"
+_check awk -f "${basedir}/shout_awk_test"
+
 
 _run 'barf prints fatal message and exits with 111'
 cat - > "${basedir}/barf_test.sh" <<'EOF'
@@ -81,6 +90,15 @@ EOF
 
 env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/barf_test.sh" > "${basedir}/barf_test"
 _check sh "${basedir}/barf_test"
+
+_run 'barf.awk prints fatal message and exits with 111'
+cat - > "${basedir}/barf_awk_test.awk" <<'EOF'
+#include "barf.awk"
+BEGIN { barf("test error"); }
+EOF
+
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/barf_awk_test.awk" > "${basedir}/barf_awk_test"
+_check awk -f "${basedir}/barf_awk_test"
 
 _run 'scrip code resolves includes'
 _check env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/scriptest"
