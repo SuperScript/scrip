@@ -48,3 +48,15 @@ hello world
 
 .../tests/basedir/safe_fail: fatal: cannot false
 111
+
+
+#### shout prints message to stderr
+
+.../tests/basedir/shout_test: test message
+0
+
+
+#### barf prints fatal message and exits with 111
+
+.../tests/basedir/barf_test: fatal: test error
+111

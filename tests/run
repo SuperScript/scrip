@@ -83,5 +83,25 @@ EOF
 env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/safe_fail.sh" > "${basedir}/safe_fail"
 _check sh "${basedir}/safe_fail"
 
+_run 'shout prints message to stderr'
+cat - > "${basedir}/shout_test.sh" <<'EOF'
+#!/bin/sh
+#include "shout.sh"
+shout "test message"
+EOF
+
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/shout_test.sh" > "${basedir}/shout_test"
+_check sh "${basedir}/shout_test"
+
+_run 'barf prints fatal message and exits with 111'
+cat - > "${basedir}/barf_test.sh" <<'EOF'
+#!/bin/sh
+#include "barf.sh"
+barf "test error"
+EOF
+
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/barf_test.sh" > "${basedir}/barf_test"
+_check sh "${basedir}/barf_test"
+
 exit 0
 
