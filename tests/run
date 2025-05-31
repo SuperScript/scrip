@@ -64,22 +64,24 @@ _run 'scrip code resolves includes'
 _check env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/scriptest"
 
 _run 'safe succeeds with valid command'
-cat - > "${basedir}/safe_success" <<'EOF'
+cat - > "${basedir}/safe_success.sh" <<'EOF'
 #!/bin/sh
 #include "safe.sh"
 safe echo "hello world"
 EOF
 
-_check env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/safe_success" | sh
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/safe_success.sh" > "${basedir}/safe_success"
+_check sh "${basedir}/safe_success"
 
-_run 'safe fails with invalid command and shows error'
-cat - > "${basedir}/safe_fail" <<'EOF'
+_run 'safe fails and shows error'
+cat - > "${basedir}/safe_fail.sh" <<'EOF'
 #!/bin/sh
 #include "safe.sh"
-safe nosuchcommand_12345
+safe false
 EOF
 
-_check_err env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/safe_fail" | sh
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/safe_fail.sh" > "${basedir}/safe_fail"
+_check sh "${basedir}/safe_fail"
 
 exit 0
 

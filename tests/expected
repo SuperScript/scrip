@@ -44,7 +44,7 @@ hello world
 0
 
 
-#### safe fails with invalid command and shows error
+#### safe fails and shows error
 
-fatal: cannot nosuchcommand_12345
+.../tests/basedir/safe_fail: fatal: cannot false
 111
