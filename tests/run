@@ -143,11 +143,11 @@ _run 'atomic_to cleans up on failure'
 cat - > "${basedir}/atomic_to_fail.sh" <<'EOF'
 #!/bin/sh
 #include "atomic_to.sh"
-(atomic_to "output.txt" false)
-if [ -f "output.txt" ]; then
-  echo "ERROR: output.txt should not exist"
+(atomic_to "fail_output.txt" false)
+if [ -f "fail_output.txt" ]; then
+  echo "ERROR: fail_output.txt should not exist"
 else
-  echo "OK: output.txt does not exist"
+  echo "OK: fail_output.txt does not exist"
 fi
 EOF
 
@@ -172,11 +172,11 @@ _run 'atomic_to_mode cleans up on failure'
 cat - > "${basedir}/atomic_to_mode_fail.sh" <<'EOF'
 #!/bin/sh
 #include "atomic_to_mode.sh"
-(atomic_to_mode "script.sh" "755" false)
-if [ -f "script.sh" ]; then
-  echo "ERROR: script.sh should not exist"
+(atomic_to_mode "fail_script.sh" "755" false)
+if [ -f "fail_script.sh" ]; then
+  echo "ERROR: fail_script.sh should not exist"
 else
-  echo "OK: script.sh does not exist"
+  echo "OK: fail_script.sh does not exist"
 fi
 EOF
 
