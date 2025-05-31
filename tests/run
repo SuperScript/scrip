@@ -131,8 +131,8 @@ _run 'atomic_to writes output atomically on success'
 cat - > "${basedir}/atomic_to_test.sh" <<'EOF'
 #!/bin/sh
 #include "atomic_to.sh"
-atomic_to "output.txt" echo "test content"
-cat "output.txt"
+atomic_to "basedir/output.txt" echo "test content"
+cat "basedir/output.txt"
 EOF
 
 env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/atomic_to_test.sh" > "${basedir}/atomic_to_test"
@@ -143,11 +143,11 @@ _run 'atomic_to cleans up on failure'
 cat - > "${basedir}/atomic_to_fail.sh" <<'EOF'
 #!/bin/sh
 #include "atomic_to.sh"
-(atomic_to "fail_output.txt" false)
-if [ -f "fail_output.txt" ]; then
-  echo "ERROR: fail_output.txt should not exist"
+(atomic_to "basedir/fail_output.txt" false)
+if [ -f "basedir/fail_output.txt" ]; then
+  echo "ERROR: basedir/fail_output.txt should not exist"
 else
-  echo "OK: fail_output.txt does not exist"
+  echo "OK: basedir/fail_output.txt does not exist"
 fi
 EOF
 
