@@ -7,7 +7,7 @@ atomic_to_mode() {
   shift 2
   local temp="${output}.$$.new"
   "$@" > "${temp}" && chmod "${mode}" "${temp}" && mv "${temp}" "${output}" || {
-    LOCAL E=$?
+    local e=$?
     rm -f "${temp}"
     exit $e
   }

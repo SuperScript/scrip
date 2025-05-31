@@ -6,13 +6,13 @@
 #_#   help
 #_#     Print this helpful message
 #_#
-do_help() {
+_help() {
   sed -n 's/^#_#/ /p' "$0"
 }
 
 if test 'help' = "$1"
 then
-  do_help
+  _help
   exit 0
 fi
 

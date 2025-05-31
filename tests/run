@@ -7,6 +7,7 @@ PATH="${home}/src:$PATH"
 export PATH
 
 scrip=scrip
+basedir="${home}/tests/basedir"
 
 ####
 
@@ -44,9 +45,23 @@ _run() {
 ####
 
 cd tests
+rm -rf "${basedir}"
 
-_run 'scrip offers help'
+_run 'scrip help offers help'
 _check ${scrip} help
+
+_run 'scrip deps lists dependencies'
+mkdir -p "${basedir}"
+cat - > "${basedir}/scriptest" <<'EOF'
+#!/bin/sh
+#include "safe.sh"
+safe nosuchprogram
+EOF
+
+_check env SCRIP_PATH="${home}/lib" ${scrip} deps "${basedir}/scriptest"
+
+_run 'scrip code resolves includes'
+_check env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/scriptest"
 
 exit 0
 

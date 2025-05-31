@@ -1,6 +1,6 @@
 
 
-#### scrip offers help
+#### scrip help offers help
 
   scrip mode file...
  
@@ -16,4 +16,23 @@
       Print the code in files, resolving includes
       Includes are inserted only the first time encountered
  
+0
+
+
+#### scrip deps lists dependencies
+
+.../tests/basedir/scriptest
+.../lib/safe.sh
+.../lib/barf.sh
+.../lib/shout.sh
+0
+
+
+#### scrip code resolves includes
+
+#!/bin/sh
+shout() { echo "$0: $*" >&2; }
+barf() { shout "fatal: $*"; exit 111; }
+safe() { "$@" || barf "cannot $*"; }
+safe nosuchprogram
 0
