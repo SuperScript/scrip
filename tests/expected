@@ -36,7 +36,7 @@
 
 #### shout.awk prints message to stderr
 
-scrip: test message
+awk: test message
 0
 
 
@@ -48,7 +48,7 @@ scrip: test message
 
 #### barf.awk prints fatal message and exits with 111
 
-scrip: fatal: test error
+awk: fatal: test error
 111
 
 

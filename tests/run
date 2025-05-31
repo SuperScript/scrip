@@ -71,6 +71,7 @@ EOF
 env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/shout_test.sh" > "${basedir}/shout_test"
 _check sh "${basedir}/shout_test"
 
+
 _run 'shout.awk prints message to stderr'
 cat - > "${basedir}/shout_awk_test.awk" <<'EOF'
 #include "shout.awk"
