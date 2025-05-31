@@ -60,28 +60,6 @@ EOF
 
 _check env SCRIP_PATH="${home}/lib" ${scrip} deps "${basedir}/scriptest"
 
-_run 'scrip code resolves includes'
-_check env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/scriptest"
-
-_run 'safe succeeds with valid command'
-cat - > "${basedir}/safe_success.sh" <<'EOF'
-#!/bin/sh
-#include "safe.sh"
-safe echo "hello world"
-EOF
-
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/safe_success.sh" > "${basedir}/safe_success"
-_check sh "${basedir}/safe_success"
-
-_run 'safe fails and shows error'
-cat - > "${basedir}/safe_fail.sh" <<'EOF'
-#!/bin/sh
-#include "safe.sh"
-safe false
-EOF
-
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/safe_fail.sh" > "${basedir}/safe_fail"
-_check sh "${basedir}/safe_fail"
 
 _run 'shout prints message to stderr'
 cat - > "${basedir}/shout_test.sh" <<'EOF'
@@ -93,6 +71,7 @@ EOF
 env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/shout_test.sh" > "${basedir}/shout_test"
 _check sh "${basedir}/shout_test"
 
+
 _run 'barf prints fatal message and exits with 111'
 cat - > "${basedir}/barf_test.sh" <<'EOF'
 #!/bin/sh
@@ -102,6 +81,32 @@ EOF
 
 env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/barf_test.sh" > "${basedir}/barf_test"
 _check sh "${basedir}/barf_test"
+
+_run 'scrip code resolves includes'
+_check env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/scriptest"
+
+
+_run 'safe succeeds with valid command'
+cat - > "${basedir}/safe_success.sh" <<'EOF'
+#!/bin/sh
+#include "safe.sh"
+safe echo "hello world"
+EOF
+
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/safe_success.sh" > "${basedir}/safe_success"
+_check sh "${basedir}/safe_success"
+
+
+_run 'safe fails and shows error'
+cat - > "${basedir}/safe_fail.sh" <<'EOF'
+#!/bin/sh
+#include "safe.sh"
+safe false
+EOF
+
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/safe_fail.sh" > "${basedir}/safe_fail"
+_check sh "${basedir}/safe_fail"
+
 
 exit 0
 
