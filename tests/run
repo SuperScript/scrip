@@ -159,9 +159,9 @@ _run 'atomic_to_mode writes output with correct mode'
 cat - > "${basedir}/atomic_to_mode_test.sh" <<'EOF'
 #!/bin/sh
 #include "atomic_to_mode.sh"
-atomic_to_mode "script.sh" "755" echo "#!/bin/sh"
-ls -l "script.sh" | cut -d' ' -f1
-cat "script.sh"
+atomic_to_mode "basedir/script.sh" "755" echo "#!/bin/sh"
+ls -l "basedir/script.sh" | cut -d' ' -f1
+cat "basedir/script.sh"
 EOF
 
 env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/atomic_to_mode_test.sh" > "${basedir}/atomic_to_mode_test"
@@ -172,11 +172,11 @@ _run 'atomic_to_mode cleans up on failure'
 cat - > "${basedir}/atomic_to_mode_fail.sh" <<'EOF'
 #!/bin/sh
 #include "atomic_to_mode.sh"
-(atomic_to_mode "fail_script.sh" "755" false)
-if [ -f "fail_script.sh" ]; then
-  echo "ERROR: fail_script.sh should not exist"
+(atomic_to_mode "basedir/fail_script.sh" "755" false)
+if [ -f "basedir/fail_script.sh" ]; then
+  echo "ERROR: basedir/fail_script.sh should not exist"
 else
-  echo "OK: fail_script.sh does not exist"
+  echo "OK: basedir/fail_script.sh does not exist"
 fi
 EOF
 
