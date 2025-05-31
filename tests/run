@@ -127,5 +127,62 @@ env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/safe_fail.sh" > "${basedi
 _check sh "${basedir}/safe_fail"
 
 
+_run 'atomic_to writes output atomically on success'
+cat - > "${basedir}/atomic_to_test.sh" <<'EOF'
+#!/bin/sh
+#include "atomic_to.sh"
+atomic_to "output.txt" echo "test content"
+cat "output.txt"
+EOF
+
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/atomic_to_test.sh" > "${basedir}/atomic_to_test"
+_check sh "${basedir}/atomic_to_test"
+
+
+_run 'atomic_to cleans up on failure'
+cat - > "${basedir}/atomic_to_fail.sh" <<'EOF'
+#!/bin/sh
+#include "atomic_to.sh"
+atomic_to "output.txt" false
+if [ -f "output.txt" ]; then
+  echo "ERROR: output.txt should not exist"
+else
+  echo "OK: output.txt does not exist"
+fi
+EOF
+
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/atomic_to_fail.sh" > "${basedir}/atomic_to_fail"
+_check sh "${basedir}/atomic_to_fail"
+
+
+_run 'atomic_to_mode writes output with correct mode'
+cat - > "${basedir}/atomic_to_mode_test.sh" <<'EOF'
+#!/bin/sh
+#include "atomic_to_mode.sh"
+atomic_to_mode "script.sh" "755" echo "#!/bin/sh"
+ls -l "script.sh" | cut -d' ' -f1
+cat "script.sh"
+EOF
+
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/atomic_to_mode_test.sh" > "${basedir}/atomic_to_mode_test"
+_check sh "${basedir}/atomic_to_mode_test"
+
+
+_run 'atomic_to_mode cleans up on failure'
+cat - > "${basedir}/atomic_to_mode_fail.sh" <<'EOF'
+#!/bin/sh
+#include "atomic_to_mode.sh"
+atomic_to_mode "script.sh" "755" false
+if [ -f "script.sh" ]; then
+  echo "ERROR: script.sh should not exist"
+else
+  echo "OK: script.sh does not exist"
+fi
+EOF
+
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/atomic_to_mode_fail.sh" > "${basedir}/atomic_to_mode_fail"
+_check sh "${basedir}/atomic_to_mode_fail"
+
+
 exit 0
 
