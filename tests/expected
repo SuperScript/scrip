@@ -72,3 +72,28 @@ hello world
 
 .../tests/basedir/safe_fail: fatal: cannot false
 111
+
+
+#### atomic_to writes output atomically on success
+
+test content
+0
+
+
+#### atomic_to cleans up on failure
+
+OK: basedir/fail_output.txt does not exist
+0
+
+
+#### atomic_to_mode writes output with correct mode
+
+-rwxr-xr-x
+#!/bin/sh
+0
+
+
+#### atomic_to_mode cleans up on failure
+
+OK: basedir/fail_script.sh does not exist
+0
