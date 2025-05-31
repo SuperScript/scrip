@@ -36,3 +36,15 @@ barf() { shout "fatal: $*"; exit 111; }
 safe() { "$@" || barf "cannot $*"; }
 safe nosuchprogram
 0
+
+
+#### safe succeeds with valid command
+
+hello world
+0
+
+
+#### safe fails with invalid command and shows error
+
+fatal: cannot nosuchcommand_12345
+111

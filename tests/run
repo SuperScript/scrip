@@ -63,5 +63,23 @@ _check env SCRIP_PATH="${home}/lib" ${scrip} deps "${basedir}/scriptest"
 _run 'scrip code resolves includes'
 _check env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/scriptest"
 
+_run 'safe succeeds with valid command'
+cat - > "${basedir}/safe_success" <<'EOF'
+#!/bin/sh
+#include "safe.sh"
+safe echo "hello world"
+EOF
+
+_check env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/safe_success" | sh
+
+_run 'safe fails with invalid command and shows error'
+cat - > "${basedir}/safe_fail" <<'EOF'
+#!/bin/sh
+#include "safe.sh"
+safe nosuchcommand_12345
+EOF
+
+_check_err env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/safe_fail" | sh
+
 exit 0
 
