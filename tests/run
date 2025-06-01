@@ -3,7 +3,7 @@
 home="$(pwd)"
 _sort="env LC_ALL=POSIX sort"
 
-PATH="${home}/src:$PATH"
+PATH="${home}/bin:$PATH"
 export PATH
 
 scrip=scrip
