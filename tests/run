@@ -184,5 +184,46 @@ env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/atomic_to_mode_fail.sh" >
 _check sh "${basedir}/atomic_to_mode_fail"
 
 
+_run 'compose pipes two commands'
+cat - > "${basedir}/compose_simple.sh" <<'EOF'
+#!/bin/sh
+#include "compose.sh"
+compose echo "hello world" "|" cat
+EOF
+
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/compose_simple.sh" > "${basedir}/compose_simple"
+_check sh "${basedir}/compose_simple"
+
+_run 'compose chains multiple commands'
+cat - > "${basedir}/compose_multi.sh" <<'EOF'
+#!/bin/sh
+#include "compose.sh"
+compose echo "line1\nline2\nline3" "|" sort "|" head -n 1
+EOF
+
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/compose_multi.sh" > "${basedir}/compose_multi"
+_check sh "${basedir}/compose_multi"
+
+_run 'compose with single command (no separator)'
+cat - > "${basedir}/compose_single.sh" <<'EOF'
+#!/bin/sh
+#include "compose.sh"
+compose echo "no pipe here"
+EOF
+
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/compose_single.sh" > "${basedir}/compose_single"
+_check sh "${basedir}/compose_single"
+
+_run 'compose with command arguments'
+cat - > "${basedir}/compose_args.sh" <<'EOF'
+#!/bin/sh
+#include "compose.sh"
+compose printf "apple\nbanana\ncherry\n" "|" grep "a"
+EOF
+
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/compose_args.sh" > "${basedir}/compose_args"
+_check sh "${basedir}/compose_args"
+
+
 exit 0
 
