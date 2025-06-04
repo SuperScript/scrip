@@ -140,5 +140,23 @@ X: THEREUGO
 
 #### usage prints usage message and exits with 100
 
-.../tests/basedir/usage_test: usage: .../tests/basedir/usage_test this is output from usage to standard error
+.../tests/basedir/usage_test: usage: this is output from usage to standard error
+100
+
+
+#### have_args returns 0 when enough arguments provided
+
+SUCCESS: have_args returned 0
+0
+
+
+#### have_args returns 1 when not enough arguments provided
+
+SUCCESS: have_args returned 1
+0
+
+
+#### have_args with no arguments shows usage and exits
+
+.../tests/basedir/have_args_no_args: usage: have_args count [args...]
 100

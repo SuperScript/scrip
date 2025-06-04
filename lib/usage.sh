@@ -1,2 +1,2 @@
 #include "shout.sh"
-usage() { shout "usage: $0 $*"; exit 100; }
+usage() { shout "usage: $*"; exit 100; }
