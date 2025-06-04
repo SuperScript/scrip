@@ -258,5 +258,16 @@ env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/compose_do_xrun.sh" > "${
 _check sh "${basedir}/compose_do_xrun"
 
 
+_run 'usage prints usage message and exits with 100'
+cat - > "${basedir}/usage_test.sh" <<'EOF'
+#!/bin/sh
+#include "usage.sh"
+usage "[-h] [-v] file"
+EOF
+
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/usage_test.sh" > "${basedir}/usage_test"
+_check sh "${basedir}/usage_test"
+
+
 exit 0
 
