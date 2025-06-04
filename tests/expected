@@ -136,3 +136,9 @@ HEREUR
 X: HEREUR
 X: THEREUGO
 0
+
+
+#### usage prints usage message and exits with 100
+
+.../tests/basedir/usage_test: usage: .../tests/basedir/usage_test this is output from usage to standard error
+100

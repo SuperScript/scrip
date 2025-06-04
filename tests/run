@@ -262,7 +262,7 @@ _run 'usage prints usage message and exits with 100'
 cat - > "${basedir}/usage_test.sh" <<'EOF'
 #!/bin/sh
 #include "usage.sh"
-usage "[-h] [-v] file"
+usage "this is output from usage to standard error"
 EOF
 
 env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/usage_test.sh" > "${basedir}/usage_test"
