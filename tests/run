@@ -230,5 +230,33 @@ env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/compose_do.sh" > "${based
 _check sh "${basedir}/compose_do"
 
 
+_run 'compose with do_run works'
+cat - > "${basedir}/compose_do_run.sh" <<'EOF'
+#!/bin/sh
+#include "do_.sh"
+#include "do_run.sh"
+do_echo() { echo "$@"; }
+do_tr() { tr "$@"; }
+do_ :: echo "hereur" :: run sed 's/^/thereugo\n/' :: tr '[a-z]' '[A-Z]'
+EOF
+
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/compose_do_run.sh" > "${basedir}/compose_do_run"
+_check sh "${basedir}/compose_do_run"
+
+
+_run 'compose with do_xrun works'
+cat - > "${basedir}/compose_do_xrun.sh" <<'EOF'
+#!/bin/sh
+#include "do_.sh"
+#include "do_xrun.sh"
+do_echo() { printf '%s\n' "$@"; }
+do_tr() { tr "$@"; }
+do_ :: echo "hereur" "thereugo" :: xrun -L1 echo "X:" :: tr '[a-z]' '[A-Z]'
+EOF
+
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/compose_do_xrun.sh" > "${basedir}/compose_do_xrun"
+_check sh "${basedir}/compose_do_xrun"
+
+
 exit 0
 

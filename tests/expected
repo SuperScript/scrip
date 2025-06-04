@@ -122,3 +122,17 @@ no pipe here
 thereugo
 hereur
 0
+
+
+#### compose with do_run works
+
+THEREUGO
+HEREUR
+0
+
+
+#### compose with do_xrun works
+
+X: HEREUR
+X: THEREUGO
+0
