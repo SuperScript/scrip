@@ -34,14 +34,12 @@ _compose() {
 
 # compose head-prefix sep prog1 [sep prog2 ...]
 compose() {
-  local prefix="$1"
-  local sep="$2"
+  local f="$(mktemp -u compose_XXXXXX)"
+  eval "$f(){ _compose '\"$f\" ' \"$1\" \"$2\" \"\$@\" ; }"
   shift 2
-  local fn="$(mktemp -u compose_XXXXXX)"
-  eval "${fn}(){ _compose '\"${fn}\" ' \"${prefix}\" \"${sep}\" \"\$@\" ; }"
-  "${fn}" "$@"
+  "$f" "$@"
   local e=$?
-  unset -f "${fn}"
+  unset -f "$f"
   return $e
 }
 
