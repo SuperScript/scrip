@@ -269,5 +269,46 @@ env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/usage_test.sh" > "${based
 _check sh "${basedir}/usage_test"
 
 
+_run 'have_args returns 0 when enough arguments provided'
+cat - > "${basedir}/have_args_success.sh" <<'EOF'
+#!/bin/sh
+#include "have_args.sh"
+if have_args 2 arg1 arg2 arg3; then
+  echo "SUCCESS: have_args returned 0"
+else
+  echo "FAIL: have_args returned non-zero"
+fi
+EOF
+
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/have_args_success.sh" > "${basedir}/have_args_success"
+_check sh "${basedir}/have_args_success"
+
+
+_run 'have_args returns 1 when not enough arguments provided'
+cat - > "${basedir}/have_args_fail.sh" <<'EOF'
+#!/bin/sh
+#include "have_args.sh"
+if have_args 3 arg1 arg2; then
+  echo "FAIL: have_args returned 0"
+else
+  echo "SUCCESS: have_args returned 1"
+fi
+EOF
+
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/have_args_fail.sh" > "${basedir}/have_args_fail"
+_check sh "${basedir}/have_args_fail"
+
+
+_run 'have_args with no arguments shows usage and exits'
+cat - > "${basedir}/have_args_no_args.sh" <<'EOF'
+#!/bin/sh
+#include "have_args.sh"
+have_args
+EOF
+
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/have_args_no_args.sh" > "${basedir}/have_args_no_args"
+_check sh "${basedir}/have_args_no_args"
+
+
 exit 0
 
