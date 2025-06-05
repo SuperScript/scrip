@@ -1,5 +1,8 @@
 #!/bin/sh
 
+shout() { echo "$0: $*" >&2; }
+usage() { shout "usage: $*"; exit 100; }
+
 #_# scrip mode file...
 #_#
 
@@ -102,6 +105,11 @@ _mode() {
   { barf("this should never happen") }
   ' "$@"
 }
+
+if test $# -lt 1
+then
+  usage "$0 deps|code file..."
+fi
 
 if test 'help' = "$1"
 then

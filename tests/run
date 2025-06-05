@@ -47,6 +47,9 @@ _run() {
 cd tests
 rm -rf "${basedir}"
 
+_run 'scrip prints usage'
+_check ${scrip}
+
 _run 'scrip help offers help'
 _check ${scrip} help
 
