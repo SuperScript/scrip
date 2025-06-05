@@ -18,4 +18,9 @@ sep='::'
 
 ####
 
+if test $# -lt 1
+then
+  usage "$0 prog1 [sep prog2 ...]"
+fi
+
 do_ "${sep}" "$@"
