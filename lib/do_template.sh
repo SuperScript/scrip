@@ -1,5 +1,7 @@
 #!/bin/sh
 
+#### template functions
+
 #include "shout.sh"
 #include "barf.sh"
 #include "safe.sh"
@@ -14,11 +16,13 @@
 #include "do_run.sh"
 #include "do_xrun.sh"
 
-####
+#### program functions
+
+#### parameters
 
 sep='::'
 
-####
+#### main
 
 if test $# -lt 1
 then
