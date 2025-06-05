@@ -1,4 +1,3 @@
-#include "help.sh"
 #_# help
 #_#   Print this helpful message
 #_#
