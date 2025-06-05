@@ -1,3 +1,5 @@
+#!/bin/sh
+
 #include "shout.sh"
 #include "barf.sh"
 #include "safe.sh"
