@@ -1,5 +1,5 @@
-# compose tail-prefix prefix sep prog1 [sep prog2 ...]
-_compose() {
+# pipeline tail-prefix prefix sep prog1 [sep prog2 ...]
+_pipeline() {
   local tail_prefix=" $1"
   local tail=
   local head_prefix=" $2"
@@ -32,10 +32,12 @@ _compose() {
   fi
 }
 
-# compose head-prefix sep prog1 [sep prog2 ...]
-compose() {
-  local f="$(mktemp -u compose_XXXXXX)"
-  eval "$f(){ _compose '\"$f\" ' \"$1\" \"$2\" \"\$@\" ; }"
+# pipeline head-prefix sep prog1 [sep prog2 ...]
+pipeline() {
+  # NB: Global, not local
+  pipeline_nest="$((0${pipeline_nest} + 1))"
+  local f="pipeline_${pipeline_nest}"
+  eval "$f(){ _pipeline '\"$f\" ' \"$1\" \"$2\" \"\$@\" ; }"
   shift 2
   "$f" "$@"
   local e=$?

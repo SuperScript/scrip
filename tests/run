@@ -187,41 +187,41 @@ env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/atomic_to_mode_fail.sh" >
 _check sh "${basedir}/atomic_to_mode_fail"
 
 
-_run 'compose pipes two commands'
-cat - > "${basedir}/compose_simple.sh" <<'EOF'
+_run 'pipeline pipes two commands'
+cat - > "${basedir}/pipeline_simple.sh" <<'EOF'
 #!/bin/sh
-#include "compose.sh"
-compose '' '|' echo 'hello world' '|' sed 's/^h/H/'
+#include "pipeline.sh"
+pipeline '' '|' echo 'hello world' '|' sed 's/^h/H/'
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/compose_simple.sh" > "${basedir}/compose_simple"
-_check sh "${basedir}/compose_simple"
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/pipeline_simple.sh" > "${basedir}/pipeline_simple"
+_check sh "${basedir}/pipeline_simple"
 
 
-_run 'compose chains multiple commands'
-cat - > "${basedir}/compose_multi.sh" <<'EOF'
+_run 'pipeline chains multiple commands'
+cat - > "${basedir}/pipeline_multi.sh" <<'EOF'
 #!/bin/sh
-#include "compose.sh"
-compose '' :: printf '%s\n' line3 line2 line1 :: sort :: head -n 1
+#include "pipeline.sh"
+pipeline '' :: printf '%s\n' line3 line2 line1 :: sort :: head -n 1
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/compose_multi.sh" > "${basedir}/compose_multi"
-_check sh "${basedir}/compose_multi"
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/pipeline_multi.sh" > "${basedir}/pipeline_multi"
+_check sh "${basedir}/pipeline_multi"
 
 
-_run 'compose with single command (no separator)'
-cat - > "${basedir}/compose_single.sh" <<'EOF'
+_run 'pipeline with single command (no separator)'
+cat - > "${basedir}/pipeline_single.sh" <<'EOF'
 #!/bin/sh
-#include "compose.sh"
-compose '' '' echo "no pipe here"
+#include "pipeline.sh"
+pipeline '' '' echo "no pipe here"
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/compose_single.sh" > "${basedir}/compose_single"
-_check sh "${basedir}/compose_single"
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/pipeline_single.sh" > "${basedir}/pipeline_single"
+_check sh "${basedir}/pipeline_single"
 
 
-_run 'compose with do_ works'
-cat - > "${basedir}/compose_do.sh" <<'EOF'
+_run 'pipeline with do_ works'
+cat - > "${basedir}/pipeline_do.sh" <<'EOF'
 #!/bin/sh
 #include "do_.sh"
 do_echo() { echo "$@"; }
@@ -229,12 +229,12 @@ do_sed() { sed "$@"; }
 do_ :: echo "hereur" :: sed 's/^/thereugo\n/'
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/compose_do.sh" > "${basedir}/compose_do"
-_check sh "${basedir}/compose_do"
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/pipeline_do.sh" > "${basedir}/pipeline_do"
+_check sh "${basedir}/pipeline_do"
 
 
-_run 'compose with do_run works'
-cat - > "${basedir}/compose_do_run.sh" <<'EOF'
+_run 'pipeline with do_run works'
+cat - > "${basedir}/pipeline_do_run.sh" <<'EOF'
 #!/bin/sh
 #include "do_.sh"
 #include "do_run.sh"
@@ -243,12 +243,12 @@ do_tr() { tr "$@"; }
 do_ :: echo "hereur" :: run sed 's/^/thereugo\n/' :: tr '[a-z]' '[A-Z]'
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/compose_do_run.sh" > "${basedir}/compose_do_run"
-_check sh "${basedir}/compose_do_run"
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/pipeline_do_run.sh" > "${basedir}/pipeline_do_run"
+_check sh "${basedir}/pipeline_do_run"
 
 
-_run 'compose with do_xrun works'
-cat - > "${basedir}/compose_do_xrun.sh" <<'EOF'
+_run 'pipeline with do_xrun works'
+cat - > "${basedir}/pipeline_do_xrun.sh" <<'EOF'
 #!/bin/sh
 #include "do_.sh"
 #include "do_xrun.sh"
@@ -257,8 +257,8 @@ do_tr() { tr "$@"; }
 do_ :: echo "hereur" "thereugo" :: xrun -L1 echo "X:" :: tr '[a-z]' '[A-Z]'
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/compose_do_xrun.sh" > "${basedir}/compose_do_xrun"
-_check sh "${basedir}/compose_do_xrun"
+env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/pipeline_do_xrun.sh" > "${basedir}/pipeline_do_xrun"
+_check sh "${basedir}/pipeline_do_xrun"
 
 
 _run 'usage prints usage message and exits with 100'

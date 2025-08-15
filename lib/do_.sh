@@ -1,7 +1,7 @@
-#include "compose.sh"
+#include "pipeline.sh"
 # do_ sep prog1 [sep prog2 ...]
 #   Build and execute pipeline sep-separated programs
 #
 do_() {
-  compose 'do_' "$@"
+  pipeline 'do_' "$@"
 }

@@ -105,39 +105,39 @@ OK: basedir/fail_script.sh does not exist
 0
 
 
-#### compose pipes two commands
+#### pipeline pipes two commands
 
 Hello world
 0
 
 
-#### compose chains multiple commands
+#### pipeline chains multiple commands
 
 line1
 0
 
 
-#### compose with single command (no separator)
+#### pipeline with single command (no separator)
 
 no pipe here
 0
 
 
-#### compose with do_ works
+#### pipeline with do_ works
 
 thereugo
 hereur
 0
 
 
-#### compose with do_run works
+#### pipeline with do_run works
 
 THEREUGO
 HEREUR
 0
 
 
-#### compose with do_xrun works
+#### pipeline with do_xrun works
 
 X: HEREUR
 X: THEREUGO
