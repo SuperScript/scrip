@@ -1,5 +1,11 @@
 
 
+#### scrip prints usage
+
+.../bin/scrip: usage: .../bin/scrip deps|code file...
+100
+
+
 #### scrip help offers help
 
   scrip mode file...
