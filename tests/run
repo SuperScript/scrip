@@ -313,5 +313,17 @@ env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/have_args_no_args.sh" > "
 _check sh "${basedir}/have_args_no_args"
 
 
+_run 'bin/pipeline prints usage and exits'
+_check "${home}/bin/pipeline"
+
+_run 'bin/pipeline requires a program'
+_check "${home}/bin/pipeline" ::
+
+_run 'bin/pipeline runs a program'
+_check "${home}/bin/pipeline" :: echo hereur
+
+_run 'bin/pipeline pipelines programs'
+_check "${home}/bin/pipeline" :: echo hereur :: sh -c 'echo thereugo && cat -'
+
 exit 0
 

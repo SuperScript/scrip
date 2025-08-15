@@ -166,3 +166,28 @@ SUCCESS: have_args returned 1
 
 .../tests/basedir/have_args_no_args: usage: have_args count [args...]
 100
+
+
+#### bin/pipeline prints usage and exits
+
+.../bin/pipeline: usage: .../bin/pipeline sep prog [sep prog ...]
+100
+
+
+#### bin/pipeline requires a program
+
+.../bin/pipeline: usage: .../bin/pipeline sep prog [sep prog ...]
+100
+
+
+#### bin/pipeline runs a program
+
+hereur
+0
+
+
+#### bin/pipeline pipelines programs
+
+thereugo
+hereur
+0
