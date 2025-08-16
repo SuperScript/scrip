@@ -3,15 +3,24 @@
 shout() { echo "$0: $*" >&2; }
 usage() { shout "usage: $*"; exit 100; }
 
-#_# scrip help
-#_# scrip code|deps file...
+#_# scrip code|deps|help file...
 #_#
 
 #_#   help
 #_#     Print this helpful message
 #_#
 do_help() {
-  sed -n 's/^#_#/ /p' "$0"
+  if test $# -gt 0
+  then
+    for f in "$@"
+    do
+      printf '%s\n\n' "$f"
+      sed -n 's/^#_#/ /p' "$f"
+    done
+  else
+    printf '%s\n\n' "$0"
+    sed -n 's/^#_#/ /p' "$0"
+  fi
 }
 
 #_#   deps file...
@@ -114,7 +123,7 @@ fi
 
 if test 'help' = "$1"
 then
-  do_help
+  "do_$@"
   exit 0
 fi
 

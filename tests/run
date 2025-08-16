@@ -47,13 +47,13 @@ _run() {
 cd tests
 rm -rf "${basedir}"
 
-_run 'scrip prints usage'
+_run 'bin/scrip prints usage'
 _check ${scrip}
 
-_run 'scrip help offers help'
+_run 'bin/scrip help offers help'
 _check ${scrip} help
 
-_run 'scrip deps lists dependencies'
+_run 'bin/scrip deps lists dependencies'
 mkdir -p "${basedir}"
 cat - > "${basedir}/scriptest" <<'EOF'
 #!/bin/sh
@@ -104,7 +104,7 @@ EOF
 env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/barf_awk_test.awk" > "${basedir}/barf_awk_test"
 _check awk -f "${basedir}/barf_awk_test"
 
-_run 'scrip code resolves includes'
+_run 'bin/scrip code resolves includes'
 _check env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/scriptest"
 
 
@@ -324,6 +324,11 @@ _check "${home}/bin/pipeline" :: echo hereur
 
 _run 'bin/pipeline pipelines programs'
 _check "${home}/bin/pipeline" :: echo hereur :: sh -c 'echo thereugo && cat -'
+
+
+_run 'bin/scrip help takes file arguments'
+_check "${home}/bin/scrip" help "${home}/bin/pipeline" "${home}/bin/scrip"
+
 
 exit 0
 

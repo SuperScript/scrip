@@ -1,14 +1,16 @@
 
 
-#### scrip prints usage
+#### bin/scrip prints usage
 
-.../bin/scrip: usage: .../bin/scrip deps|code file...
+.../bin/scrip: usage: .../bin/scrip code|deps|help file...
 100
 
 
-#### scrip help offers help
+#### bin/scrip help offers help
 
-  scrip mode file...
+.../bin/scrip
+
+  scrip code|deps|help file...
  
     help
       Print this helpful message
@@ -25,7 +27,7 @@
 0
 
 
-#### scrip deps lists dependencies
+#### bin/scrip deps lists dependencies
 
 .../tests/basedir/scriptest
 .../lib/safe.sh
@@ -58,7 +60,7 @@ awk: fatal: test error
 111
 
 
-#### scrip code resolves includes
+#### bin/scrip code resolves includes
 
 #!/bin/sh
 shout() { echo "$0: $*" >&2; }
@@ -190,4 +192,29 @@ hereur
 
 thereugo
 hereur
+0
+
+
+#### bin/scrip help takes file arguments
+
+.../bin/pipeline
+
+  pipeline sep prog [sep prog ...]
+ 
+.../bin/scrip
+
+  scrip code|deps|help file...
+ 
+    help
+      Print this helpful message
+ 
+    deps file...
+      Print the list of included file paths
+      Path is printed only the first time encountered
+      Paths are sorted by order of encounter
+ 
+    code file...
+      Print the code in files, resolving includes
+      Includes are inserted only the first time encountered
+ 
 0
