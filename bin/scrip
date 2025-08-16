@@ -3,7 +3,8 @@
 shout() { echo "$0: $*" >&2; }
 usage() { shout "usage: $*"; exit 100; }
 
-#_# scrip mode file...
+#_# scrip help
+#_# scrip code|deps file...
 #_#
 
 #_#   help
@@ -108,7 +109,7 @@ _mode() {
 
 if test $# -lt 1
 then
-  usage "$0 deps|code file..."
+  usage "$0 code|deps|help file..."
 fi
 
 if test 'help' = "$1"
