@@ -10,3 +10,5 @@ The scrip system provides a program that processes include statements recursivel
 
 Each file is included only the first time an include statement for that file is encountered. Subsequent include statements for the same file are ignored.
 
+The `SCRIP_PATH` environment variable holds a colon-separated list of directories to search for relative file paths. Absolute paths or relative paths starting with `./` do not use `SCRIP_PATH`.
+
