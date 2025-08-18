@@ -33,9 +33,6 @@ _run() {
   while read x rest
   do
     case "$x" in
-    c|typecat)
-      _typecat "${rest}"
-      ;;
     t|typelines)
       _typelines "${rest}"
       ;;
@@ -49,6 +46,9 @@ _run() {
 
 #_# cast cast_file < commands
 #_#   cast script as a cast file
+#_#   scripts contain these commands:
+#_#     s n (sleep n seconds)
+#_#     t line (type line into asciinema)
 #_#
 do_cast() {
   _run | sh -c '

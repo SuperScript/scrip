@@ -1,0 +1,5 @@
+t bin/asciinema-script
+s 1
+t bin/asciinema-script help
+t exit 0
+
