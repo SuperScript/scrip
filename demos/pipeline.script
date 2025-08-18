@@ -1,0 +1,9 @@
+t bin/pipeline
+s 1
+t bin/scrip help bin/pipeline
+s 1
+t bin/pipeline :: echo a :: sh -c 'echo b && cat -'
+s 1
+t bin/pipeline :: echo a :: xargs echo b :: xargs echo c
+s 1
+t exit 0
