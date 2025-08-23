@@ -15,20 +15,28 @@ build:
 #_#   Capture an asciinema recording of the source script
 #_#
 .script.cast: build
-	rm -f "$$(dirname "$<")/$$(basename "$<" .script).cast"
-	bin/asciinema-script cast "$$(dirname "$<")/$$(basename "$<" .script).cast" < $<
+	rm -f "$@"
+	bin/asciinema-script cast "$@" < $<
 
 #_# .cast.gif
 #_#   Create a .gif file from the .cast recording
 #_#
 .cast.gif: build
-	bin/asciinema-script gif $< "$$(dirname "$<")/$$(basename "$<" .cast).gif"
+	bin/asciinema-script gif $< "$@"
+
+#_# demos
+#_#   Create a .gif file for each demos/*.script file
+#_#
+demos: build
+	for f in demos/*.script; do $(MAKE) "$${f%.script}.gif"; done
 
 #_# clean
 #_#   Remove build and test artifacts
 #_#
 clean:
 	rm -f tests/output
+	rm -f demos/*.gif
+	rm -f demos/*.cast
 
 #_# tests
 #_#   Run test suite and diff with expected results

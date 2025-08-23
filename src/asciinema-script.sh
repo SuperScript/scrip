@@ -41,8 +41,20 @@ _run() {
       ;;
     esac
   done
-  echo exit 0
+  printf '\004'
 }
+
+do_run() {
+  _run < "$1"
+}
+
+# do_shell() {
+#   sh -c '
+#     PS1="\$ "
+#     export PS1
+#     sh
+#   '
+# }
 
 #_# cast cast_file < commands
 #_#   cast script as a cast file
@@ -51,17 +63,17 @@ _run() {
 #_#     t line (type line into asciinema)
 #_#
 do_cast() {
-  _run | sh -c '
-    asciinema rec --cols=80 --rows=24 "$1"
-  ' asciinema "$@"
-  exit 0
+  rm -f "$1.tmp"
+  _run | PS1='$ ' asciinema rec -q -c "ENV=/dev/null sh" --cols=80 --rows=24 "$1.tmp"
+  { sed '$d' < "$1.tmp" | sed '$d' > "$1.new"; } && mv "$1.new" "$1"
+  rm -f "$1.tmp"
 }
 
 #_# gif cast_file gif_file
 #_#   convert cast_file into gif_file with standard arguments
 #_#
 do_gif() {
-  agg --font-size "${font_size}" --cols 80 --rows 24 --fps-cap 10 --theme solarized-dark "$@"
+  agg --no-loop --font-size "${font_size}" --cols 80 --rows 24 --fps-cap 10 --theme solarized-dark "$@"
   exit 0
 }
 
