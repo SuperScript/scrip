@@ -42,6 +42,16 @@ _run() {
   printf '\n\n#### %s\n\n' "$1"
 }
 
+# _check_prog progname interpreter < program
+_check_prog() {
+  local prog="$1"
+  shift
+  cat - > "${basedir}/${prog}.tmp"
+  env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/${prog}.tmp" > "${basedir}/${prog}"
+  rm -f "${basedir}/${prog}.tmp"
+  _check "$@" "${basedir}/${prog}"
+}
+
 ####
 
 cd tests
@@ -63,87 +73,60 @@ EOF
 
 _check env SCRIP_PATH="${home}/lib" ${scrip} deps "${basedir}/scriptest"
 
+_run 'bin/scrip code resolves includes'
+_check env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/scriptest"
+
 
 _run 'shout prints message to stderr'
-cat - > "${basedir}/shout_test.sh" <<'EOF'
+_check_prog shout_test sh <<'EOF'
 #!/bin/sh
 #include "shout.sh"
 shout "test message"
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/shout_test.sh" > "${basedir}/shout_test"
-_check sh "${basedir}/shout_test"
-
-
 _run 'shout.awk prints message to stderr'
-cat - > "${basedir}/shout_awk_test.awk" <<'EOF'
+_check_prog shout_awk_test.awk awk -f <<'EOF'
 #include "shout.awk"
 BEGIN { shout("test message"); }
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/shout_awk_test.awk" > "${basedir}/shout_awk_test"
-_check awk -f "${basedir}/shout_awk_test"
-
-
 _run 'barf prints fatal message and exits with 111'
-cat - > "${basedir}/barf_test.sh" <<'EOF'
+_check_prog barf_test sh <<'EOF'
 #!/bin/sh
 #include "barf.sh"
 barf "test error"
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/barf_test.sh" > "${basedir}/barf_test"
-_check sh "${basedir}/barf_test"
-
 _run 'barf.awk prints fatal message and exits with 111'
-cat - > "${basedir}/barf_awk_test.awk" <<'EOF'
+_check_prog barf_awk_test.awk awk -f <<'EOF'
 #include "barf.awk"
 BEGIN { barf("test error"); }
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/barf_awk_test.awk" > "${basedir}/barf_awk_test"
-_check awk -f "${basedir}/barf_awk_test"
-
-_run 'bin/scrip code resolves includes'
-_check env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/scriptest"
-
-
 _run 'safe succeeds with valid command'
-cat - > "${basedir}/safe_success.sh" <<'EOF'
+_check_prog safe_success sh <<'EOF'
 #!/bin/sh
 #include "safe.sh"
 safe echo "hello world"
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/safe_success.sh" > "${basedir}/safe_success"
-_check sh "${basedir}/safe_success"
-
-
 _run 'safe fails and shows error'
-cat - > "${basedir}/safe_fail.sh" <<'EOF'
+_check_prog safe_fail sh <<'EOF'
 #!/bin/sh
 #include "safe.sh"
 safe false
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/safe_fail.sh" > "${basedir}/safe_fail"
-_check sh "${basedir}/safe_fail"
-
-
 _run 'atomic_to writes output atomically on success'
-cat - > "${basedir}/atomic_to_test.sh" <<'EOF'
+_check_prog atomic_to_test sh <<'EOF'
 #!/bin/sh
 #include "atomic_to.sh"
 atomic_to "basedir/output.txt" echo "test content"
 cat "basedir/output.txt"
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/atomic_to_test.sh" > "${basedir}/atomic_to_test"
-_check sh "${basedir}/atomic_to_test"
-
-
 _run 'atomic_to cleans up on failure'
-cat - > "${basedir}/atomic_to_fail.sh" <<'EOF'
+_check_prog atomic_to_fail sh <<'EOF'
 #!/bin/sh
 #include "atomic_to.sh"
 (atomic_to "basedir/fail_output.txt" false)
@@ -154,12 +137,8 @@ else
 fi
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/atomic_to_fail.sh" > "${basedir}/atomic_to_fail"
-_check sh "${basedir}/atomic_to_fail"
-
-
 _run 'atomic_to_mode writes output with correct mode'
-cat - > "${basedir}/atomic_to_mode_test.sh" <<'EOF'
+_check_prog atomic_to_mode_test sh <<'EOF'
 #!/bin/sh
 #include "atomic_to_mode.sh"
 atomic_to_mode "basedir/script.sh" "755" echo "#!/bin/sh"
@@ -167,12 +146,8 @@ ls -l "basedir/script.sh" | cut -d' ' -f1
 cat "basedir/script.sh"
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/atomic_to_mode_test.sh" > "${basedir}/atomic_to_mode_test"
-_check sh "${basedir}/atomic_to_mode_test"
-
-
 _run 'atomic_to_mode cleans up on failure'
-cat - > "${basedir}/atomic_to_mode_fail.sh" <<'EOF'
+_check_prog atomic_to_mode_fail sh <<'EOF'
 #!/bin/sh
 #include "atomic_to_mode.sh"
 (atomic_to_mode "basedir/fail_script.sh" "755" false)
@@ -183,45 +158,36 @@ else
 fi
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/atomic_to_mode_fail.sh" > "${basedir}/atomic_to_mode_fail"
-_check sh "${basedir}/atomic_to_mode_fail"
-
-
-_run 'pipeline pipes two commands'
-cat - > "${basedir}/pipeline_simple.sh" <<'EOF'
+_run 'pipeline with single command (with separator)'
+_check_prog pipeline_single sh <<'EOF'
 #!/bin/sh
 #include "pipeline.sh"
-pipeline '' '|' echo 'hello world' '|' sed 's/^h/H/'
+pipeline '' '|' echo "no pipe here"
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/pipeline_simple.sh" > "${basedir}/pipeline_simple"
-_check sh "${basedir}/pipeline_simple"
-
-
-_run 'pipeline chains multiple commands'
-cat - > "${basedir}/pipeline_multi.sh" <<'EOF'
-#!/bin/sh
-#include "pipeline.sh"
-pipeline '' :: printf '%s\n' line3 line2 line1 :: sort :: head -n 1
-EOF
-
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/pipeline_multi.sh" > "${basedir}/pipeline_multi"
-_check sh "${basedir}/pipeline_multi"
-
-
-_run 'pipeline with single command (no separator)'
-cat - > "${basedir}/pipeline_single.sh" <<'EOF'
+_run 'pipeline with single command (without separator)'
+_check_prog pipeline_single sh <<'EOF'
 #!/bin/sh
 #include "pipeline.sh"
 pipeline '' '' echo "no pipe here"
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/pipeline_single.sh" > "${basedir}/pipeline_single"
-_check sh "${basedir}/pipeline_single"
+_run 'pipeline pipes two commands'
+_check_prog pipeline_simple sh <<'EOF'
+#!/bin/sh
+#include "pipeline.sh"
+pipeline '' '|' echo 'hello world' '|' sed 's/^h/H/'
+EOF
 
+_run 'pipeline chains multiple commands'
+_check_prog pipeline_multi sh <<'EOF'
+#!/bin/sh
+#include "pipeline.sh"
+pipeline '' :: printf '%s\n' line3 line2 line1 :: sort :: head -n 1
+EOF
 
 _run 'pipeline with do_ works'
-cat - > "${basedir}/pipeline_do.sh" <<'EOF'
+_check_prog pipeline_do sh <<'EOF'
 #!/bin/sh
 #include "do_.sh"
 do_echo() { echo "$@"; }
@@ -229,12 +195,8 @@ do_sed() { sed "$@"; }
 do_ :: echo "hereur" :: sed 's/^/thereugo\n/'
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/pipeline_do.sh" > "${basedir}/pipeline_do"
-_check sh "${basedir}/pipeline_do"
-
-
 _run 'pipeline with do_run works'
-cat - > "${basedir}/pipeline_do_run.sh" <<'EOF'
+_check_prog pipeline_do_run sh <<'EOF'
 #!/bin/sh
 #include "do_.sh"
 #include "do_run.sh"
@@ -243,12 +205,8 @@ do_tr() { tr "$@"; }
 do_ :: echo "hereur" :: run sed 's/^/thereugo\n/' :: tr '[a-z]' '[A-Z]'
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/pipeline_do_run.sh" > "${basedir}/pipeline_do_run"
-_check sh "${basedir}/pipeline_do_run"
-
-
 _run 'pipeline with do_xrun works'
-cat - > "${basedir}/pipeline_do_xrun.sh" <<'EOF'
+_check_prog pipeline_do_xrun sh <<'EOF'
 #!/bin/sh
 #include "do_.sh"
 #include "do_xrun.sh"
@@ -257,23 +215,59 @@ do_tr() { tr "$@"; }
 do_ :: echo "hereur" "thereugo" :: xrun -L1 echo "X:" :: tr '[a-z]' '[A-Z]'
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/pipeline_do_xrun.sh" > "${basedir}/pipeline_do_xrun"
-_check sh "${basedir}/pipeline_do_xrun"
+_run 'pipewith with single command (with separator)'
+_check_prog pipewith_single sh <<'EOF'
+#!/bin/sh
+#include "pipewith.sh"
+show() {
+  echo pipewith: "$@" >&2
+  "$@"
+}
+pipewith show '|' echo "no pipe here"
+EOF
 
+_run 'pipewith with single command (without separator)'
+_check_prog pipewith_single sh <<'EOF'
+#!/bin/sh
+#include "pipewith.sh"
+show() {
+  echo pipewith: "$@" >&2
+  "$@"
+}
+pipewith show '' echo "no pipe here"
+EOF
+
+_run 'pipewith pipes two commands'
+_check_prog pipewith_simple sh <<'EOF'
+#!/bin/sh
+#include "pipewith.sh"
+show() {
+  echo pipewith: "$@" >&2
+  "$@"
+}
+pipewith show '|' echo 'hello world' '|' sed 's/^h/H/'
+EOF
+
+_run 'pipewith chains multiple commands'
+_check_prog pipewith_multi sh <<'EOF'
+#!/bin/sh
+#include "pipewith.sh"
+show() {
+  echo pipewith: "$@" >&2
+  "$@"
+}
+pipewith show :: printf '%s\n' line3 line2 line1 :: sort :: head -n 1
+EOF
 
 _run 'usage prints usage message and exits with 100'
-cat - > "${basedir}/usage_test.sh" <<'EOF'
+_check_prog usage_test sh <<'EOF'
 #!/bin/sh
 #include "usage.sh"
 usage "this is output from usage to standard error"
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/usage_test.sh" > "${basedir}/usage_test"
-_check sh "${basedir}/usage_test"
-
-
 _run 'have_args returns 0 when enough arguments provided'
-cat - > "${basedir}/have_args_success.sh" <<'EOF'
+_check_prog have_args_success sh <<'EOF'
 #!/bin/sh
 #include "have_args.sh"
 if have_args 2 arg1 arg2 arg3; then
@@ -283,12 +277,8 @@ else
 fi
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/have_args_success.sh" > "${basedir}/have_args_success"
-_check sh "${basedir}/have_args_success"
-
-
 _run 'have_args returns 1 when not enough arguments provided'
-cat - > "${basedir}/have_args_fail.sh" <<'EOF'
+_check_prog have_args_fail sh <<'EOF'
 #!/bin/sh
 #include "have_args.sh"
 if have_args 3 arg1 arg2; then
@@ -298,20 +288,12 @@ else
 fi
 EOF
 
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/have_args_fail.sh" > "${basedir}/have_args_fail"
-_check sh "${basedir}/have_args_fail"
-
-
 _run 'have_args with no arguments shows usage and exits'
-cat - > "${basedir}/have_args_no_args.sh" <<'EOF'
+_check_prog have_args_no_args sh <<'EOF'
 #!/bin/sh
 #include "have_args.sh"
 have_args
 EOF
-
-env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/have_args_no_args.sh" > "${basedir}/have_args_no_args"
-_check sh "${basedir}/have_args_no_args"
-
 
 _run 'bin/pipeline prints usage and exits'
 _check "${home}/bin/pipeline"

@@ -36,6 +36,16 @@
 0
 
 
+#### bin/scrip code resolves includes
+
+#!/bin/sh
+shout() { echo "$0: $*" >&2; }
+barf() { shout "fatal: $*"; exit 111; }
+safe() { "$@" || barf "cannot $*"; }
+safe nosuchprogram
+0
+
+
 #### shout prints message to stderr
 
 .../tests/basedir/shout_test: test message
@@ -58,16 +68,6 @@ awk: test message
 
 awk: fatal: test error
 111
-
-
-#### bin/scrip code resolves includes
-
-#!/bin/sh
-shout() { echo "$0: $*" >&2; }
-barf() { shout "fatal: $*"; exit 111; }
-safe() { "$@" || barf "cannot $*"; }
-safe nosuchprogram
-0
 
 
 #### safe succeeds with valid command
@@ -107,6 +107,18 @@ OK: basedir/fail_script.sh does not exist
 0
 
 
+#### pipeline with single command (with separator)
+
+no pipe here
+0
+
+
+#### pipeline with single command (without separator)
+
+no pipe here
+0
+
+
 #### pipeline pipes two commands
 
 Hello world
@@ -116,12 +128,6 @@ Hello world
 #### pipeline chains multiple commands
 
 line1
-0
-
-
-#### pipeline with single command (no separator)
-
-no pipe here
 0
 
 
@@ -143,6 +149,37 @@ HEREUR
 
 X: HEREUR
 X: THEREUGO
+0
+
+
+#### pipewith with single command (with separator)
+
+pipewith: echo no pipe here
+no pipe here
+0
+
+
+#### pipewith with single command (without separator)
+
+pipewith: echo no pipe here
+no pipe here
+0
+
+
+#### pipewith pipes two commands
+
+pipewith: echo hello world
+pipewith: sed s/^h/H/
+Hello world
+0
+
+
+#### pipewith chains multiple commands
+
+pipewith: printf %s\n line3 line2 line1
+pipewith: sort
+pipewith: head -n 1
+line1
 0
 
 
