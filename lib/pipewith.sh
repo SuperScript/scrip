@@ -4,13 +4,13 @@ pipewith_cmd() {
 
   local cmd=''
   local i=3
-  local p='"${1}"'
+  local p='${1:+"$1"}'
   for a in "$@"
   do
     if test "$a" = "${sep}"
     then
       cmd="${cmd} |"
-      p='"${1}"'
+      p='${1:+"$1"}'
     else
       cmd="${cmd} ${p} \"\${$i}\""
       p=''

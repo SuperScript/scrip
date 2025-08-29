@@ -82,6 +82,12 @@ hello world
 111
 
 
+#### usage prints usage message and exits with 100
+
+.../tests/basedir/usage_test: usage: this is output from usage to standard error
+100
+
+
 #### atomic_to writes output atomically on success
 
 test content
@@ -107,45 +113,21 @@ OK: basedir/fail_script.sh does not exist
 0
 
 
-#### pipeline with single command (with separator)
-
-no pipe here
-0
-
-
-#### pipeline with single command (without separator)
-
-no pipe here
-0
-
-
-#### pipeline pipes two commands
-
-Hello world
-0
-
-
-#### pipeline chains multiple commands
-
-line1
-0
-
-
-#### pipeline with do_ works
+#### pipewith with do_ works
 
 thereugo
 hereur
 0
 
 
-#### pipeline with do_run works
+#### pipewith with do_run works
 
 THEREUGO
 HEREUR
 0
 
 
-#### pipeline with do_xrun works
+#### pipewith with do_xrun works
 
 X: HEREUR
 X: THEREUGO
@@ -183,10 +165,28 @@ line1
 0
 
 
-#### usage prints usage message and exits with 100
+#### pipeline with single command (with separator)
 
-.../tests/basedir/usage_test: usage: this is output from usage to standard error
-100
+no pipe here
+0
+
+
+#### pipeline with single command (without separator)
+
+no pipe here
+0
+
+
+#### pipeline pipes two commands
+
+Hello world
+0
+
+
+#### pipeline chains multiple commands
+
+line1
+0
 
 
 #### have_args returns 0 when enough arguments provided

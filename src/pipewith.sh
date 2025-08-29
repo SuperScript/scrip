@@ -4,6 +4,6 @@
 
 #_# pipewith cmd sep args1 [sep args2 ...]
 #_#
-test $# -gt 1 || usage "$0 cmd sep args1 [sep args2 ...]"
+test $# -gt 2 || usage "$0 cmd sep args1 [sep args2 ...]"
 pipewith "$@"
 

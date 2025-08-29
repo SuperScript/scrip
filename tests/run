@@ -117,6 +117,13 @@ _check_prog safe_fail sh <<'EOF'
 safe false
 EOF
 
+_run 'usage prints usage message and exits with 100'
+_check_prog usage_test sh <<'EOF'
+#!/bin/sh
+#include "usage.sh"
+usage "this is output from usage to standard error"
+EOF
+
 _run 'atomic_to writes output atomically on success'
 _check_prog atomic_to_test sh <<'EOF'
 #!/bin/sh
@@ -158,61 +165,36 @@ else
 fi
 EOF
 
-_run 'pipeline with single command (with separator)'
-_check_prog pipeline_single sh <<'EOF'
+_run 'pipewith with do_ works'
+_check_prog pipewith_do sh <<'EOF'
 #!/bin/sh
-#include "pipeline.sh"
-pipeline '' '|' echo "no pipe here"
-EOF
-
-_run 'pipeline with single command (without separator)'
-_check_prog pipeline_single sh <<'EOF'
-#!/bin/sh
-#include "pipeline.sh"
-pipeline '' '' echo "no pipe here"
-EOF
-
-_run 'pipeline pipes two commands'
-_check_prog pipeline_simple sh <<'EOF'
-#!/bin/sh
-#include "pipeline.sh"
-pipeline '' '|' echo 'hello world' '|' sed 's/^h/H/'
-EOF
-
-_run 'pipeline chains multiple commands'
-_check_prog pipeline_multi sh <<'EOF'
-#!/bin/sh
-#include "pipeline.sh"
-pipeline '' :: printf '%s\n' line3 line2 line1 :: sort :: head -n 1
-EOF
-
-_run 'pipeline with do_ works'
-_check_prog pipeline_do sh <<'EOF'
-#!/bin/sh
+#include "pipewith.sh"
 #include "do_.sh"
 do_echo() { echo "$@"; }
 do_sed() { sed "$@"; }
-do_ :: echo "hereur" :: sed 's/^/thereugo\n/'
+pipewith do_ :: echo "hereur" :: sed 's/^/thereugo\n/'
 EOF
 
-_run 'pipeline with do_run works'
-_check_prog pipeline_do_run sh <<'EOF'
+_run 'pipewith with do_run works'
+_check_prog pipewith_do_run sh <<'EOF'
 #!/bin/sh
+#include "pipewith.sh"
 #include "do_.sh"
 #include "do_run.sh"
 do_echo() { echo "$@"; }
 do_tr() { tr "$@"; }
-do_ :: echo "hereur" :: run sed 's/^/thereugo\n/' :: tr '[a-z]' '[A-Z]'
+pipewith do_ :: echo "hereur" :: run sed 's/^/thereugo\n/' :: tr '[a-z]' '[A-Z]'
 EOF
 
-_run 'pipeline with do_xrun works'
-_check_prog pipeline_do_xrun sh <<'EOF'
+_run 'pipewith with do_xrun works'
+_check_prog pipewith_do_xrun sh <<'EOF'
 #!/bin/sh
+#include "pipewith.sh"
 #include "do_.sh"
 #include "do_xrun.sh"
 do_echo() { printf '%s\n' "$@"; }
 do_tr() { tr "$@"; }
-do_ :: echo "hereur" "thereugo" :: xrun -L1 echo "X:" :: tr '[a-z]' '[A-Z]'
+pipewith do_ :: echo "hereur" "thereugo" :: xrun -L1 echo "X:" :: tr '[a-z]' '[A-Z]'
 EOF
 
 _run 'pipewith with single command (with separator)'
@@ -259,11 +241,32 @@ show() {
 pipewith show :: printf '%s\n' line3 line2 line1 :: sort :: head -n 1
 EOF
 
-_run 'usage prints usage message and exits with 100'
-_check_prog usage_test sh <<'EOF'
+_run 'pipeline with single command (with separator)'
+_check_prog pipeline_single sh <<'EOF'
 #!/bin/sh
-#include "usage.sh"
-usage "this is output from usage to standard error"
+#include "pipeline.sh"
+pipeline '|' echo "no pipe here"
+EOF
+
+_run 'pipeline with single command (without separator)'
+_check_prog pipeline_single sh <<'EOF'
+#!/bin/sh
+#include "pipeline.sh"
+pipeline '' echo "no pipe here"
+EOF
+
+_run 'pipeline pipes two commands'
+_check_prog pipeline_simple sh <<'EOF'
+#!/bin/sh
+#include "pipeline.sh"
+pipeline '|' echo 'hello world' '|' sed 's/^h/H/'
+EOF
+
+_run 'pipeline chains multiple commands'
+_check_prog pipeline_multi sh <<'EOF'
+#!/bin/sh
+#include "pipeline.sh"
+pipeline :: printf '%s\n' line3 line2 line1 :: sort :: head -n 1
 EOF
 
 _run 'have_args returns 0 when enough arguments provided'
