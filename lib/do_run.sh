@@ -1,5 +1,5 @@
 #_# run prog
-#_#   Execute prog as a pipeline segment
+#_#   Execute prog
 #_#
 do_run() {
   "$@"

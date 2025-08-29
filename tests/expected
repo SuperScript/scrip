@@ -236,6 +236,9 @@ hereur
 
 .../bin/pipeline
 
+  run prog
+    Execute prog
+ 
   pipeline sep prog [sep prog ...]
  
 .../bin/scrip
