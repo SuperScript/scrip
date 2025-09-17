@@ -29,4 +29,4 @@ then
   usage "$0 prog1 [${sep} prog2 ...]"
 fi
 
-do_ "${sep}" "$@"
+pipewith do_ "${sep}" "$@"
