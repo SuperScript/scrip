@@ -235,7 +235,8 @@ _check_prog pipewith_multi sh <<'EOF'
 #!/bin/sh
 #include "pipewith.sh"
 show() {
-  echo pipewith: "$@" >&2
+  printf '%s ' pipewith: "$@" >&2
+  printf '\n' >&2
   "$@"
 }
 pipewith show :: printf '%s\n' line3 line2 line1 :: sort :: head -n 1
