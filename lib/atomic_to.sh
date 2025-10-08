@@ -3,7 +3,7 @@
 atomic_to() {
   local output="$1"
   shift
-  local temp="${output}.$$.new"
+  local temp="$(mktemp "${output}.XXXXXX")"
   "$@" > "${temp}" && mv "${temp}" "${output}" || {
     local e=$?
     rm -f "${temp}"
