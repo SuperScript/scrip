@@ -170,7 +170,7 @@ _check_prog pipewith_do sh <<'EOF'
 #!/bin/sh
 #include "pipewith.sh"
 #include "do_.sh"
-do_echo() { echo "$@"; }
+do_echo() { printf '%s\n' "$*"; }
 do_sed() { sed "$@"; }
 pipewith do_ :: echo "hereur" :: sed 's/^/thereugo\n/'
 EOF
@@ -181,7 +181,7 @@ _check_prog pipewith_do_run sh <<'EOF'
 #include "pipewith.sh"
 #include "do_.sh"
 #include "do_run.sh"
-do_echo() { echo "$@"; }
+do_echo() { printf '%s\n' "$*"; }
 do_tr() { tr "$@"; }
 pipewith do_ :: echo "hereur" :: run sed 's/^/thereugo\n/' :: tr '[a-z]' '[A-Z]'
 EOF
@@ -192,9 +192,9 @@ _check_prog pipewith_do_xrun sh <<'EOF'
 #include "pipewith.sh"
 #include "do_.sh"
 #include "do_xrun.sh"
-do_echo() { printf '%s\n' "$@"; }
+do_echos() { printf '%s\n' "$@"; }
 do_tr() { tr "$@"; }
-pipewith do_ :: echo "hereur" "thereugo" :: xrun -L1 echo "X:" :: tr '[a-z]' '[A-Z]'
+pipewith do_ :: echos "hereur" "thereugo" :: xrun -L1 sh -c 'printf "%s\n" "$*"' xrun "X:" :: tr '[a-z]' '[A-Z]'
 EOF
 
 _run 'pipewith with single command (with separator)'
@@ -202,7 +202,7 @@ _check_prog pipewith_single sh <<'EOF'
 #!/bin/sh
 #include "pipewith.sh"
 show() {
-  echo pipewith: "$@" >&2
+  printf '%s\n' "pipewith: $*" >&2
   "$@"
 }
 pipewith show '|' echo "no pipe here"
@@ -213,7 +213,7 @@ _check_prog pipewith_single sh <<'EOF'
 #!/bin/sh
 #include "pipewith.sh"
 show() {
-  echo pipewith: "$@" >&2
+  printf '%s\n' "pipewith: $*" >&2
   "$@"
 }
 pipewith show '' echo "no pipe here"
@@ -224,7 +224,7 @@ _check_prog pipewith_simple sh <<'EOF'
 #!/bin/sh
 #include "pipewith.sh"
 show() {
-  echo pipewith: "$@" >&2
+  printf '%s\n' "pipewith: $*" >&2
   "$@"
 }
 pipewith show '|' echo 'hello world' '|' sed 's/^h/H/'

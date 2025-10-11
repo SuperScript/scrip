@@ -1,0 +1,3 @@
+ditto() {
+  printf '%s\n' "$*"
+}

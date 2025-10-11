@@ -1,1 +1,2 @@
-shout() { echo "$0: $*" >&2; }
+#include "ditto.sh"
+shout() { ditto "$0: $*" >&2; }

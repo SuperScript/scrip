@@ -116,16 +116,18 @@ _mode() {
   ' "$@"
 }
 
+do_deps() {
+  _mode deps "$@"
+}
+
+do_code() {
+  _mode code "$@"
+}
+
 if test $# -lt 1
 then
   usage "$0 code|deps|help file..."
 fi
 
-if test 'help' = "$1"
-then
-  "do_$@"
-  exit 0
-fi
-
-_mode "$@"
+"do_$@"
 
