@@ -33,17 +33,43 @@
 .../lib/safe.sh
 .../lib/barf.sh
 .../lib/shout.sh
+.../lib/ditto.sh
 0
 
 
 #### bin/scrip code resolves includes
 
 #!/bin/sh
-shout() { echo "$0: $*" >&2; }
+ditto() {
+  printf '%s\n' "$*"
+}
+shout() { ditto "$0: $*" >&2; }
 barf() { shout "fatal: $*"; exit 111; }
 safe() { "$@" || barf "cannot $*"; }
 safe nosuchprogram
 0
+
+
+#### ditto prints single argument to stdout
+
+test message
+0
+
+
+#### ditto prints multiple arguments to stdout
+
+first second third
+0
+
+
+#### ditt prints single argument to stdout without newline
+
+test message0
+
+
+#### ditt prints multiple arguments to stdout without newline
+
+first second third0
 
 
 #### shout prints message to stderr
