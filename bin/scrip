@@ -2,14 +2,17 @@
 
 shout() { echo "$0: $*" >&2; }
 usage() { shout "usage: $*"; exit 100; }
-
-#_# scrip code|deps|help file...
-#_#
-
-#_#   help
-#_#     Print this helpful message
+#_# help
+#_#   Print this helpful message
 #_#
 do_help() {
+  sed -n 's/^#_#/ /p' "$0"
+}
+
+#_# docs file ...
+#_#   Print help for each file argument
+#_#
+do_docs() {
   if test $# -gt 0
   then
     for f in "$@"
@@ -123,6 +126,9 @@ do_deps() {
 do_code() {
   _mode code "$@"
 }
+
+#_# scrip code|deps|docs|help file...
+#_#
 
 if test $# -lt 1
 then

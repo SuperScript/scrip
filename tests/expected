@@ -8,12 +8,11 @@
 
 #### bin/scrip help offers help
 
-.../bin/scrip
-
-  scrip code|deps|help file...
+  help
+    Print this helpful message
  
-    help
-      Print this helpful message
+  docs file ...
+    Print help for each file argument
  
     deps file...
       Print the list of included file paths
@@ -23,6 +22,8 @@
     code file...
       Print the code in files, resolving includes
       Includes are inserted only the first time encountered
+ 
+  scrip code|deps|docs|help file...
  
 0
 
@@ -258,7 +259,7 @@ hereur
 0
 
 
-#### bin/scrip help takes file arguments
+#### bin/scrip docs takes file arguments
 
 .../bin/pipeline
 
@@ -269,10 +270,11 @@ hereur
  
 .../bin/scrip
 
-  scrip code|deps|help file...
+  help
+    Print this helpful message
  
-    help
-      Print this helpful message
+  docs file ...
+    Print help for each file argument
  
     deps file...
       Print the list of included file paths
@@ -282,5 +284,7 @@ hereur
     code file...
       Print the code in files, resolving includes
       Includes are inserted only the first time encountered
+ 
+  scrip code|deps|docs|help file...
  
 0

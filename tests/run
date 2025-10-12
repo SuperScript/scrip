@@ -339,8 +339,8 @@ _run 'bin/pipeline pipelines programs'
 _check "${home}/bin/pipeline" :: echo hereur :: sh -c 'echo thereugo && cat -'
 
 
-_run 'bin/scrip help takes file arguments'
-_check "${home}/bin/scrip" help "${home}/bin/pipeline" "${home}/bin/scrip"
+_run 'bin/scrip docs takes file arguments'
+_check "${home}/bin/scrip" docs "${home}/bin/pipeline" "${home}/bin/scrip"
 
 
 exit 0
