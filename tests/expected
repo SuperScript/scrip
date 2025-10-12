@@ -34,17 +34,13 @@
 .../lib/safe.sh
 .../lib/barf.sh
 .../lib/shout.sh
-.../lib/ditto.sh
 0
 
 
 #### bin/scrip code resolves includes
 
 #!/bin/sh
-ditto() {
-  printf '%s\n' "$*"
-}
-shout() { ditto "$0: $*" >&2; }
+shout() { printf '%s\n' "$0: $*" >&2; }
 barf() { shout "fatal: $*"; exit 111; }
 safe() { "$@" || barf "cannot $*"; }
 safe nosuchprogram
