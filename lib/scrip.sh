@@ -1,13 +1,5 @@
-#!/bin/sh
-
-shout() { echo "$0: $*" >&2; }
-usage() { shout "usage: $*"; exit 100; }
-#_# help
-#_#   Print this helpful message
-#_#
-do_help() {
-  sed -n 's/^#_#/ /p' "$0"
-}
+#include "usage.sh"
+#include "do_help.sh"
 
 #_# docs file ...
 #_#   Print help for each file argument
@@ -136,4 +128,3 @@ then
 fi
 
 "do_$@"
-

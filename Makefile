@@ -2,10 +2,16 @@ include mk/help.mk
 
 .SUFFIXES: .script .cast .gif
 
+#_# bin/scrip
+#_#   Build the scrip preprocessor from lib/scrip.sh
+#_#
+bin/scrip: lib/scrip.sh
+	(echo '#!/bin/sh'; SCRIP_PATH=./lib /bin/sh lib/scrip.sh code lib/scrip.sh) > bin/scrip.new && chmod a+x bin/scrip.new && mv bin/scrip.new bin/scrip
+
 #_# build
 #_#   Build executables from src/*.sh
 #_#
-build:
+build: bin/scrip
 	SCRIP_PATH=./lib sh -c 'for f in src/*.sh; do \
 	  n="$${f%.sh}"; n="bin/$${n##src/}"; \
 	  bin/scrip code "$$f" > "$$n.new" && chmod a+x "$$n.new" && mv "$$n.new" "$$n"; \
