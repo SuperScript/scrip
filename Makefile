@@ -1,5 +1,7 @@
 include mk/help.mk
 
+PREFIX?=/usr/local
+
 .SUFFIXES: .script .cast .gif
 
 #_# bin/scrip
@@ -51,4 +53,13 @@ tests: build
 	rm -f tests/output
 	tests/run > tests/output
 	diff tests/output tests/expected
+
+#_# install
+#_#   Install scrip and libraries to PREFIX (default /usr/local)
+#_#
+install: build
+	mkdir -p "$(PREFIX)/bin"
+	mkdir -p "$(PREFIX)/lib"
+	install -m 755 bin/scrip "$(PREFIX)/bin/scrip"
+	install -m 644 lib/* "$(PREFIX)/lib/"
 
