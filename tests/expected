@@ -2,7 +2,7 @@
 
 #### bin/scrip prints usage
 
-.../bin/scrip: usage: .../bin/scrip code|deps|help file...
+.../bin/scrip: usage: .../bin/scrip code|deps|borrow|docs|help file...
 100
 
 
@@ -23,7 +23,10 @@
       Print the code in files, resolving includes
       Includes are inserted only the first time encountered
  
-  scrip code|deps|docs|help file...
+    borrow file...
+      Copy all included dependencies to current directory
+ 
+  scrip code|deps|borrow|docs|help file...
  
 0
 
@@ -44,6 +47,14 @@ shout() { printf '%s\n' "$0: $*" >&2; }
 barf() { shout "fatal: $*"; exit 111; }
 safe() { "$@" || barf "cannot $*"; }
 safe nosuchprogram
+0
+
+
+#### bin/scrip borrow copies dependencies to current directory
+
+barf.sh
+safe.sh
+shout.sh
 0
 
 
@@ -281,6 +292,9 @@ hereur
       Print the code in files, resolving includes
       Includes are inserted only the first time encountered
  
-  scrip code|deps|docs|help file...
+    borrow file...
+      Copy all included dependencies to current directory
+ 
+  scrip code|deps|borrow|docs|help file...
  
 0

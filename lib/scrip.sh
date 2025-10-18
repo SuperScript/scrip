@@ -122,12 +122,22 @@ do_code() {
   _mode code "$@"
 }
 
-#_# scrip code|deps|docs|help file...
+#_#   borrow file...
+#_#     Copy all included dependencies to current directory
+#_#
+do_borrow() {
+  _mode deps "$@" | while read -r f
+  do
+    test -f "$f" && cp "$f" .
+  done
+}
+
+#_# scrip code|deps|borrow|docs|help file...
 #_#
 
 if test $# -lt 1
 then
-  usage "$0 code|deps|help file..."
+  usage "$0 code|deps|borrow|docs|help file..."
 fi
 
 "do_$@"

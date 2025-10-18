@@ -76,6 +76,10 @@ _check env SCRIP_PATH="${home}/lib" ${scrip} deps "${basedir}/scriptest"
 _run 'bin/scrip code resolves includes'
 _check env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/scriptest"
 
+_run 'bin/scrip borrow copies dependencies to current directory'
+mkdir -p "${basedir}/borrow"
+_check sh -c "cd ${basedir}/borrow && env SCRIP_PATH=${home}/lib ${scrip} borrow ../scriptest && ls -1 safe.sh barf.sh shout.sh 2>&1"
+
 _run 'ditto prints single argument to stdout'
 _check_prog ditto_single sh <<'EOF'
 #!/bin/sh
