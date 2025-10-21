@@ -1,12 +1,12 @@
 
 
-#### bin/scrip prints usage
+==== bin/scrip prints usage ====
 
 .../bin/scrip: usage: .../bin/scrip code|deps|borrow|docs|help file...
 100
 
 
-#### bin/scrip help offers help
+==== bin/scrip help offers help ====
 
   help
     Print this helpful message
@@ -31,7 +31,7 @@
 0
 
 
-#### bin/scrip deps lists dependencies
+==== bin/scrip deps lists dependencies ====
 
 .../tests/basedir/scriptest
 .../lib/safe.sh
@@ -40,7 +40,7 @@
 0
 
 
-#### bin/scrip code resolves includes
+==== bin/scrip code resolves includes ====
 
 #!/bin/sh
 shout() { printf '%s\n' "$0: $*" >&2; }
@@ -50,7 +50,7 @@ safe nosuchprogram
 0
 
 
-#### bin/scrip borrow copies dependencies to current directory
+==== bin/scrip borrow copies dependencies to current directory ====
 
 barf.sh
 safe.sh
@@ -58,131 +58,131 @@ shout.sh
 0
 
 
-#### ditto prints single argument to stdout
+==== ditto prints single argument to stdout ====
 
 test message
 0
 
 
-#### ditto prints multiple arguments to stdout
+==== ditto prints multiple arguments to stdout ====
 
 first second third
 0
 
 
-#### ditt prints single argument to stdout without newline
+==== ditt prints single argument to stdout without newline ====
 
 test message0
 
 
-#### ditt prints multiple arguments to stdout without newline
+==== ditt prints multiple arguments to stdout without newline ====
 
 first second third0
 
 
-#### shout prints message to stderr
+==== shout prints message to stderr ====
 
 .../tests/basedir/shout_test: test message
 0
 
 
-#### shout.awk prints message to stderr
+==== shout.awk prints message to stderr ====
 
 awk: test message
 0
 
 
-#### barf prints fatal message and exits with 111
+==== barf prints fatal message and exits with 111 ====
 
 .../tests/basedir/barf_test: fatal: test error
 111
 
 
-#### barf.awk prints fatal message and exits with 111
+==== barf.awk prints fatal message and exits with 111 ====
 
 awk: fatal: test error
 111
 
 
-#### safe succeeds with valid command
+==== safe succeeds with valid command ====
 
 hello world
 0
 
 
-#### safe fails and shows error
+==== safe fails and shows error ====
 
 .../tests/basedir/safe_fail: fatal: cannot false
 111
 
 
-#### usage prints usage message and exits with 100
+==== usage prints usage message and exits with 100 ====
 
 .../tests/basedir/usage_test: usage: this is output from usage to standard error
 100
 
 
-#### atomic_to writes output atomically on success
+==== atomic_to writes output atomically on success ====
 
 test content
 0
 
 
-#### atomic_to cleans up on failure
+==== atomic_to cleans up on failure ====
 
 OK: basedir/fail_output.txt does not exist
 0
 
 
-#### atomic_to_mode writes output with correct mode
+==== atomic_to_mode writes output with correct mode ====
 
 -rwxr-xr-x
 #!/bin/sh
 0
 
 
-#### atomic_to_mode cleans up on failure
+==== atomic_to_mode cleans up on failure ====
 
 OK: basedir/fail_script.sh does not exist
 0
 
 
-#### pipewith with do_ works
+==== pipewith with do_ works ====
 
 thereugo
 hereur
 0
 
 
-#### pipewith with do_run works
+==== pipewith with do_run works ====
 
 THEREUGO
 HEREUR
 0
 
 
-#### pipewith with do_xrun works
+==== pipewith with do_xrun works ====
 
 X: HEREUR
 X: THEREUGO
 0
 
 
-#### pipewith with single command (with separator)
+==== pipewith with single command (with separator) ====
 
 pipewith: echo no pipe here
 no pipe here
 0
 
 
-#### pipewith with single command (without separator)
+==== pipewith with single command (without separator) ====
 
 pipewith: echo no pipe here
 no pipe here
 0
 
 
-#### pipewith pipes two commands
+==== pipewith pipes two commands ====
 
 pipewith: echo hello world
 pipewith: sed s/^h/H/
@@ -190,7 +190,7 @@ Hello world
 0
 
 
-#### pipewith chains multiple commands
+==== pipewith chains multiple commands ====
 
 pipewith: printf %s\n line3 line2 line1 
 pipewith: sort 
@@ -199,74 +199,74 @@ line1
 0
 
 
-#### pipeline with single command (with separator)
+==== pipeline with single command (with separator) ====
 
 no pipe here
 0
 
 
-#### pipeline with single command (without separator)
+==== pipeline with single command (without separator) ====
 
 no pipe here
 0
 
 
-#### pipeline pipes two commands
+==== pipeline pipes two commands ====
 
 Hello world
 0
 
 
-#### pipeline chains multiple commands
+==== pipeline chains multiple commands ====
 
 line1
 0
 
 
-#### have_args returns 0 when enough arguments provided
+==== have_args returns 0 when enough arguments provided ====
 
 SUCCESS: have_args returned 0
 0
 
 
-#### have_args returns 1 when not enough arguments provided
+==== have_args returns 1 when not enough arguments provided ====
 
 SUCCESS: have_args returned 1
 0
 
 
-#### have_args with no arguments shows usage and exits
+==== have_args with no arguments shows usage and exits ====
 
 .../tests/basedir/have_args_no_args: usage: have_args count [args...]
 100
 
 
-#### bin/pipeline prints usage and exits
+==== bin/pipeline prints usage and exits ====
 
 .../bin/pipeline: usage: .../bin/pipeline sep prog [sep prog ...]
 100
 
 
-#### bin/pipeline requires a program
+==== bin/pipeline requires a program ====
 
 .../bin/pipeline: usage: .../bin/pipeline sep prog [sep prog ...]
 100
 
 
-#### bin/pipeline runs a program
+==== bin/pipeline runs a program ====
 
 hereur
 0
 
 
-#### bin/pipeline pipelines programs
+==== bin/pipeline pipelines programs ====
 
 thereugo
 hereur
 0
 
 
-#### bin/scrip docs takes file arguments
+==== bin/scrip docs takes file arguments ====
 
 .../bin/pipeline
 

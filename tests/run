@@ -39,7 +39,7 @@ _check_sort() {
 
 # _run headline
 _run() {
-  printf '\n\n#### %s\n\n' "$1"
+  printf '\n\n==== %s ====\n\n' "$1"
 }
 
 # _check_prog progname interpreter < program
