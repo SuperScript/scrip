@@ -15,7 +15,7 @@ pipewith_cmd() {
       cmd="${cmd} ${p} \"\${$i}\""
       p=''
     fi
-    i=$((i + 1))
+    i=$(($i + 1))
   done
 
   printf '%s\n' "${cmd}"

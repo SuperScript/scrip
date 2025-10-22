@@ -1,7 +1,7 @@
 .aider*
 tests/output
 tests/basedir
-bin/*
+bin/
 !bin/scrip
 demos/*.cast
 demos/*.gif

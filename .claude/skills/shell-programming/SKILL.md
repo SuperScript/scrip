@@ -1,7 +1,7 @@
 ---
 name: Shell Programming
 description: POSIX shell programming conventions, quoting rules, and error handling patterns for the scrip project
-when_to_use: when writing or modifying shell
+when_to_use: when writing or modifying shell script library modules or programs
 version: 1.0.0
 languages: sh
 ---
@@ -14,11 +14,15 @@ All shell code in scrip follows strict POSIX Bourne shell syntax plus `local` ke
 
 **Core principle:** Quote everything, fail loudly, compose from lib/ modules.
 
+## When NOT to Use
+
+When asked explicitly to create a Bash script.
+
 ## The Iron Laws
 
 ```
 1. POSIX sh only (plus `local`) - no bash/zsh/ksh extensions
-2. Quote ALL variable expansions, with curly braces around multiletter variable names - "${var}" "$@" "${output}"
+2. Quote ALL variable expansions, with curly braces around multiletter variable names - "${var}" "${output}" (name does not include "$")
 3. Use project error handling - shout/barf/usage/safe/catch
 4. Document with #_# for help extraction
 5. Test with output diff against tests/expected
@@ -28,7 +32,7 @@ All shell code in scrip follows strict POSIX Bourne shell syntax plus `local` ke
 
 ### Always Quote
 
-**All variable expansions must be quoted, with curly braces around multiletter variable names:**
+**All variable expansions must be quoted, with curly braces around multi-character variable names:**
 
 ```sh
 # ✅ CORRECT
@@ -36,7 +40,9 @@ All shell code in scrip follows strict POSIX Bourne shell syntax plus `local` ke
 "$@"
 "${output}"
 "${temp}"
+"blahblahblah: $*"
 printf '%s\n' "${message}"
+"${12}"
 for f in "$@"
 
 # ❌ WRONG
@@ -66,6 +72,27 @@ if test -f $f
 test $# -gt 1    # OK - $# is always numeric
 test "${count}" -eq 5  # GOOD - quote variables
 ```
+
+### $@ vs $*
+
+- **`"$@"`** - Each argument as separate word. Use for executing commands:
+  ```sh
+  safe() { "$@" || barf "cannot $*"; }
+  #        ^^^^ execute command
+
+- "$*" - All arguments joined with spaces. Use for messages:
+barf() { shout "fatal: $*"; exit 111; }
+#                      ^^^^ join for message
+
+### Arithmetic Expansion
+
+Arithmetic expressions don't need quotes (they can't contain spaces):
+
+```sh
+i=$(($i + 1))          # No quotes needed
+count=$((${count} + 1))  # POSIX compliant
+
+The counter variable must be initialized to a numeric value before use in an arithmetic expression.
 
 ### Function Arguments
 
@@ -111,6 +138,7 @@ shout "warning: file not found"
 ```
 
 ### barf - Fatal error (exit 111)
+Exit 111 for temporary errors.
 
 ```sh
 #include "barf.sh"
@@ -121,6 +149,7 @@ test -f "${file}" || barf "missing required file: ${file}"
 ```
 
 ### usage - Usage error (exit 100)
+Exit 111 for permanent errors.
 
 ```sh
 #include "usage.sh"
@@ -378,6 +407,7 @@ echo ""
 |---------|---------|-------|
 | Quote vars | `"${var}" "$@" "$x"` | Always quote expansions |
 | Numeric test | `test $# -gt 1` | $# doesn't need quotes |
+| Numeric values | `i=$(($i + 1))` | $# doesn't need quotes when i is numeric |
 | String test | `test "$a" = "$b"` | Quote both sides |
 | Error msg | `shout "warning"` | To stderr, continues |
 | Fatal error | `barf "fatal"` | To stderr, exit 111 |
@@ -504,7 +534,7 @@ pipewith_cmd() {
       cmd="${cmd} ${p} \"\${$i}\""
       p=''
     fi
-    i=$((i + 1))
+    i=$(($i + 1))
   done
 
   printf '%s\n' "${cmd}"
@@ -517,7 +547,7 @@ pipewith() {
 
 **Key patterns:**
 - Local vars for all state
-- Arithmetic: `i=$((i + 1))` (POSIX compliant)
+- Arithmetic: `i=$(($i + 1))` (POSIX compliant)
 - String building with `"${cmd} | ..."`
 - Careful quoting in eval context
 
@@ -540,6 +570,12 @@ do_process() {
   # process files
 }
 ```
+
+### File Names
+
+Library module files use the `.sh` extension to indicate the implementation language, because the module is language specific.
+
+Top-level command-line programs never include an extension, because that is an implementation detail and should not be exposed in the command-line interface.
 
 ## The Bottom Line
 
