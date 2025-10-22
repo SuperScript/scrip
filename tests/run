@@ -8,6 +8,8 @@ export PATH
 
 scrip=scrip
 basedir="${home}/tests/basedir"
+bindir="bin"
+libdir="lib"
 
 ####
 
@@ -47,7 +49,7 @@ _check_prog() {
   local prog="$1"
   shift
   cat - > "${basedir}/${prog}.tmp"
-  env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/${prog}.tmp" > "${basedir}/${prog}"
+  env SCRIP_PATH="${libdir}" ${scrip} code "${basedir}/${prog}.tmp" > "${basedir}/${prog}"
   rm -f "${basedir}/${prog}.tmp"
   _check "$@" "${basedir}/${prog}"
 }
@@ -57,6 +59,11 @@ _check_prog() {
 cd tests
 rm -rf "${basedir}"
 
+mkdir -p "${basedir}"
+cp -r ../lib "${basedir}"
+cp -r ../bin "${basedir}"
+cd "${basedir}"
+
 _run 'bin/scrip prints usage'
 _check ${scrip}
 
@@ -64,21 +71,20 @@ _run 'bin/scrip help offers help'
 _check ${scrip} help
 
 _run 'bin/scrip deps lists dependencies'
-mkdir -p "${basedir}"
 cat - > "${basedir}/scriptest" <<'EOF'
 #!/bin/sh
 #include "safe.sh"
 safe nosuchprogram
 EOF
 
-_check env SCRIP_PATH="${home}/lib" ${scrip} deps "${basedir}/scriptest"
+_check env SCRIP_PATH="${libdir}" ${scrip} deps "${basedir}/scriptest"
 
 _run 'bin/scrip code resolves includes'
-_check env SCRIP_PATH="${home}/lib" ${scrip} code "${basedir}/scriptest"
+_check env SCRIP_PATH="${libdir}" ${scrip} code "${basedir}/scriptest"
 
 _run 'bin/scrip borrow copies dependencies to current directory'
 mkdir -p "${basedir}/borrow"
-_check sh -c "cd ${basedir}/borrow && env SCRIP_PATH=${home}/lib ${scrip} borrow ../scriptest && ls -1 safe.sh barf.sh shout.sh 2>&1"
+_check env SCRIP_PATH="${libdir}" ${scrip} borrow "${basedir}/borrow" safe.sh barf.sh shout.sh
 
 _run 'ditto prints single argument to stdout'
 _check_prog ditto_single sh <<'EOF'
@@ -159,19 +165,19 @@ _run 'atomic_to writes output atomically on success'
 _check_prog atomic_to_test sh <<'EOF'
 #!/bin/sh
 #include "atomic_to.sh"
-atomic_to "basedir/output.txt" echo "test content"
-cat "basedir/output.txt"
+atomic_to "output.txt" echo "test content"
+cat "output.txt"
 EOF
 
 _run 'atomic_to cleans up on failure'
 _check_prog atomic_to_fail sh <<'EOF'
 #!/bin/sh
 #include "atomic_to.sh"
-(atomic_to "basedir/fail_output.txt" false)
-if [ -f "basedir/fail_output.txt" ]; then
-  echo "ERROR: basedir/fail_output.txt should not exist"
+(atomic_to "fail_output.txt" false)
+if [ -f "fail_output.txt" ]; then
+  echo "ERROR: fail_output.txt should not exist"
 else
-  echo "OK: basedir/fail_output.txt does not exist"
+  echo "OK: fail_output.txt does not exist"
 fi
 EOF
 
@@ -179,20 +185,20 @@ _run 'atomic_to_mode writes output with correct mode'
 _check_prog atomic_to_mode_test sh <<'EOF'
 #!/bin/sh
 #include "atomic_to_mode.sh"
-atomic_to_mode "basedir/script.sh" "755" echo "#!/bin/sh"
-ls -l "basedir/script.sh" | cut -d' ' -f1
-cat "basedir/script.sh"
+atomic_to_mode "script.sh" "755" echo "#!/bin/sh"
+ls -l "script.sh" | cut -d' ' -f1
+cat "script.sh"
 EOF
 
 _run 'atomic_to_mode cleans up on failure'
 _check_prog atomic_to_mode_fail sh <<'EOF'
 #!/bin/sh
 #include "atomic_to_mode.sh"
-(atomic_to_mode "basedir/fail_script.sh" "755" false)
-if [ -f "basedir/fail_script.sh" ]; then
-  echo "ERROR: basedir/fail_script.sh should not exist"
+(atomic_to_mode "fail_script.sh" "755" false)
+if [ -f "fail_script.sh" ]; then
+  echo "ERROR: fail_script.sh should not exist"
 else
-  echo "OK: basedir/fail_script.sh does not exist"
+  echo "OK: fail_script.sh does not exist"
 fi
 EOF
 
@@ -331,20 +337,24 @@ have_args
 EOF
 
 _run 'bin/pipeline prints usage and exits'
-_check "${home}/bin/pipeline"
+_check "${bindir}/pipeline"
 
 _run 'bin/pipeline requires a program'
-_check "${home}/bin/pipeline" ::
+_check "${bindir}/pipeline" ::
 
 _run 'bin/pipeline runs a program'
-_check "${home}/bin/pipeline" :: echo hereur
+_check "${bindir}/pipeline" :: echo hereur
 
 _run 'bin/pipeline pipelines programs'
-_check "${home}/bin/pipeline" :: echo hereur :: sh -c 'echo thereugo && cat -'
+_check "${bindir}/pipeline" :: echo hereur :: sh -c 'echo thereugo && cat -'
 
 
 _run 'bin/scrip docs takes file arguments'
-_check "${home}/bin/scrip" docs "${home}/bin/pipeline" "${home}/bin/scrip"
+_check "${bindir}/scrip" docs "${bindir}/pipeline" "${bindir}/scrip"
+
+_run 'bin/scrip make emits Makefile rule'
+echo _check env SCRIP_PATH="${libdir}" "${bindir}/scrip" make pipeline
+_check env SCRIP_PATH="${libdir}" "${bindir}/scrip" make pipeline
 
 
 exit 0

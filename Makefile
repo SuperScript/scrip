@@ -1,13 +1,11 @@
 include mk/help.mk
 
-PREFIX?=/usr/local
-
 .SUFFIXES: .script .cast .gif
 
 #_# bin/scrip
 #_#   Build the scrip preprocessor from lib/scrip.sh
 #_#
-bin/scrip: lib/scrip.sh
+bin/scrip: lib/scrip.sh lib/usage.sh lib/do_help.sh
 	(echo '#!/bin/sh'; SCRIP_PATH=./lib /bin/sh lib/scrip.sh code lib/scrip.sh) > bin/scrip.new && chmod a+x bin/scrip.new && mv bin/scrip.new bin/scrip
 
 #_# build
@@ -53,13 +51,4 @@ tests: build
 	rm -f tests/output
 	tests/run > tests/output
 	diff tests/output tests/expected
-
-#_# install
-#_#   Install scrip and libraries to PREFIX (default /usr/local)
-#_#
-install: build
-	mkdir -p "$(PREFIX)/bin"
-	mkdir -p "$(PREFIX)/lib"
-	install -m 755 bin/scrip "$(PREFIX)/bin/scrip"
-	install -m 644 lib/* "$(PREFIX)/lib/"
 

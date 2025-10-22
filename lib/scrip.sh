@@ -122,22 +122,50 @@ do_code() {
   _mode code "$@"
 }
 
-#_#   borrow file...
+#_#   borrow destdir file...
 #_#     Copy all included dependencies to current directory
 #_#
 do_borrow() {
+  local dest="$1"
+  shift
   _mode deps "$@" | while read -r f
   do
-    test -f "$f" && cp "$f" .
+    test -f "$f" && cp "$f" "${dest}/"
   done
 }
 
-#_# scrip code|deps|borrow|docs|help file...
+#_#   make target...
+#_#     Print Makefile rule for building bin/target from lib/target.sh
+#_#     Lists all dependencies and uses atomic write pattern
+#_#
+do_make() {
+  for name in "$@"
+  do
+    target="bin/${name}"
+    src="lib/${name}.sh"
+
+    # Emit target and dependencies on one line
+    printf '%s: bin/scrip' "${target}"
+    # SCRIP_PATH=lib _mode deps "${src}" | while read -r dep
+    _mode deps "${src}" | while read -r dep
+    do
+      printf ' %s' "${dep}"
+    done
+    printf '\n'
+
+    # Emit build command with tab prefix and atomic write pattern
+    printf '\tSCRIP_PATH=lib bin/scrip code %s > %s.new && chmod a+x %s.new && mv %s.new %s\n' \
+      "${src}" "${target}" "${target}" "${target}" "${target}"
+    printf '\n'
+  done
+}
+
+#_# scrip code|deps|borrow|make|docs|help arg...
 #_#
 
 if test $# -lt 1
 then
-  usage "$0 code|deps|borrow|docs|help file..."
+  usage "$0 code|deps|borrow|make|docs|help arg..."
 fi
 
 "do_$@"

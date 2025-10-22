@@ -2,7 +2,7 @@
 
 ==== bin/scrip prints usage ====
 
-.../bin/scrip: usage: .../bin/scrip code|deps|borrow|docs|help file...
+.../bin/scrip: usage: .../bin/scrip code|deps|borrow|make|docs|help arg...
 100
 
 
@@ -23,10 +23,14 @@
       Print the code in files, resolving includes
       Includes are inserted only the first time encountered
  
-    borrow file...
+    borrow destdir file...
       Copy all included dependencies to current directory
  
-  scrip code|deps|borrow|docs|help file...
+    make target...
+      Print Makefile rule for building bin/target from lib/target.sh
+      Lists all dependencies and uses atomic write pattern
+ 
+  scrip code|deps|borrow|make|docs|help arg...
  
 0
 
@@ -34,9 +38,9 @@
 ==== bin/scrip deps lists dependencies ====
 
 .../tests/basedir/scriptest
-.../lib/safe.sh
-.../lib/barf.sh
-.../lib/shout.sh
+lib/safe.sh
+lib/barf.sh
+lib/shout.sh
 0
 
 
@@ -52,9 +56,6 @@ safe nosuchprogram
 
 ==== bin/scrip borrow copies dependencies to current directory ====
 
-barf.sh
-safe.sh
-shout.sh
 0
 
 
@@ -130,7 +131,7 @@ test content
 
 ==== atomic_to cleans up on failure ====
 
-OK: basedir/fail_output.txt does not exist
+OK: fail_output.txt does not exist
 0
 
 
@@ -143,7 +144,7 @@ OK: basedir/fail_output.txt does not exist
 
 ==== atomic_to_mode cleans up on failure ====
 
-OK: basedir/fail_script.sh does not exist
+OK: fail_script.sh does not exist
 0
 
 
@@ -243,13 +244,13 @@ SUCCESS: have_args returned 1
 
 ==== bin/pipeline prints usage and exits ====
 
-.../bin/pipeline: usage: .../bin/pipeline sep prog [sep prog ...]
+bin/pipeline: usage: bin/pipeline sep prog [sep prog ...]
 100
 
 
 ==== bin/pipeline requires a program ====
 
-.../bin/pipeline: usage: .../bin/pipeline sep prog [sep prog ...]
+bin/pipeline: usage: bin/pipeline sep prog [sep prog ...]
 100
 
 
@@ -268,14 +269,14 @@ hereur
 
 ==== bin/scrip docs takes file arguments ====
 
-.../bin/pipeline
+bin/pipeline
 
   run prog
     Execute prog
  
   pipeline sep prog [sep prog ...]
  
-.../bin/scrip
+bin/scrip
 
   help
     Print this helpful message
@@ -292,9 +293,22 @@ hereur
       Print the code in files, resolving includes
       Includes are inserted only the first time encountered
  
-    borrow file...
+    borrow destdir file...
       Copy all included dependencies to current directory
  
-  scrip code|deps|borrow|docs|help file...
+    make target...
+      Print Makefile rule for building bin/target from lib/target.sh
+      Lists all dependencies and uses atomic write pattern
  
+  scrip code|deps|borrow|make|docs|help arg...
+ 
+0
+
+
+==== bin/scrip make emits Makefile rule ====
+
+_check env SCRIP_PATH=lib bin/scrip make pipeline
+bin/pipeline: bin/scrip lib/pipeline.sh lib/pipewith.sh lib/do_run.sh
+	SCRIP_PATH=lib bin/scrip code lib/pipeline.sh > bin/pipeline.new && chmod a+x bin/pipeline.new && mv bin/pipeline.new bin/pipeline
+
 0
