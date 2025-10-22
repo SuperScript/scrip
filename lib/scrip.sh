@@ -43,10 +43,9 @@ _mode() {
     # Get search path from environment
     path = ENVIRON["SCRIP_PATH"]
 
-    # If no path set, use sibling lib/ directory
+    # If no path set, use ./lib directory
     if (!path) {
-      path = "${0%/*}"
-      path = "${path%/*}/lib"
+      path = "lib"
     }
 
     # Split path and search each directory
