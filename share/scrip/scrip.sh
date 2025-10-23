@@ -122,11 +122,12 @@ do_code() {
 }
 
 #_#   borrow destdir file...
-#_#     Copy all included dependencies to current directory
+#_#     Copy all included dependencies to destdir
 #_#
 do_borrow() {
   local dest="$1"
   shift
+  mkdir -p "${dest}"
   _mode deps "$@" | while read -r f
   do
     test -f "$f" && cp "$f" "${dest}/"

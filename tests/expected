@@ -24,7 +24,7 @@
       Includes are inserted only the first time encountered
  
     borrow destdir file...
-      Copy all included dependencies to current directory
+      Copy all included dependencies to destdir
  
     make target...
       Print Makefile rule for building bin/target from share/scrip/target
@@ -294,7 +294,7 @@ hereur
       Includes are inserted only the first time encountered
  
     borrow destdir file...
-      Copy all included dependencies to current directory
+      Copy all included dependencies to destdir
  
     make target...
       Print Makefile rule for building bin/target from share/scrip/target
