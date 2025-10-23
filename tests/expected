@@ -308,7 +308,7 @@ bin/scrip
 ==== bin/scrip make emits Makefile rule ====
 
 _check env SCRIP_PATH=lib bin/scrip make pipeline
-bin/pipeline: bin/scrip lib/pipeline.sh lib/pipewith.sh lib/do_run.sh
-	SCRIP_PATH=lib bin/scrip code lib/pipeline.sh > bin/pipeline.new && chmod a+x bin/pipeline.new && mv bin/pipeline.new bin/pipeline
+bin/pipeline: bin/scrip src/pipeline lib/pipeline.sh lib/pipewith.sh lib/do_run.sh lib/usage.sh lib/shout.sh
+	SCRIP_PATH=lib bin/scrip code src/pipeline > bin/pipeline.new && chmod a+x bin/pipeline.new && mv bin/pipeline.new bin/pipeline
 
 0

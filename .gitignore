@@ -5,3 +5,4 @@ bin/
 !bin/scrip
 demos/*.cast
 demos/*.gif
+build/

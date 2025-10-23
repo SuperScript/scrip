@@ -141,7 +141,7 @@ do_make() {
   for name in "$@"
   do
     target="bin/${name}"
-    src="lib/${name}.sh"
+    src="src/${name}"
 
     # Emit target and dependencies on one line
     printf '%s: bin/scrip' "${target}"
@@ -159,12 +159,3 @@ do_make() {
   done
 }
 
-#_# scrip code|deps|borrow|make|docs|help arg...
-#_#
-
-if test $# -lt 1
-then
-  usage "$0 code|deps|borrow|make|docs|help arg..."
-fi
-
-"do_$@"

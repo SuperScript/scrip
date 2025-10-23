@@ -62,6 +62,7 @@ rm -rf "${basedir}"
 mkdir -p "${basedir}"
 cp -r ../lib "${basedir}"
 cp -r ../bin "${basedir}"
+cp -r ../src "${basedir}"
 cd "${basedir}"
 
 _run 'bin/scrip prints usage'

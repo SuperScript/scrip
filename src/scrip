@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#include "scrip.sh"
+
+#_# scrip code|deps|borrow|make|docs|help arg...
+#_#
+
+if test $# -lt 1
+then
+  usage "$0 code|deps|borrow|make|docs|help arg..."
+fi
+
+"do_$@"
