@@ -20,4 +20,5 @@ The `SCRIP_PATH` environment variable holds a colon-separated list of directorie
 - [x] Add borrow mode.
 - [x] Add make mode to create make target for program.
 - [x] Sort out default lib question.
+- [ ] Add install target, with PREFIX.
 - [ ] Split shell-scripting skill into shell-scripting, shell-libraries, shell-programs.
