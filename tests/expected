@@ -27,7 +27,7 @@
       Copy all included dependencies to current directory
  
     make target...
-      Print Makefile rule for building bin/target from lib/target.sh
+      Print Makefile rule for building bin/target from share/scrip/target
       Lists all dependencies and uses atomic write pattern
  
   scrip code|deps|borrow|make|docs|help arg...
@@ -38,9 +38,9 @@
 ==== bin/scrip deps lists dependencies ====
 
 .../tests/basedir/scriptest
-lib/safe.sh
-lib/barf.sh
-lib/shout.sh
+.../share/scrip/safe.sh
+.../share/scrip/barf.sh
+.../share/scrip/shout.sh
 0
 
 
@@ -244,13 +244,13 @@ SUCCESS: have_args returned 1
 
 ==== bin/pipeline prints usage and exits ====
 
-bin/pipeline: usage: bin/pipeline sep prog [sep prog ...]
+.../bin/pipeline: usage: .../bin/pipeline sep prog [sep prog ...]
 100
 
 
 ==== bin/pipeline requires a program ====
 
-bin/pipeline: usage: bin/pipeline sep prog [sep prog ...]
+.../bin/pipeline: usage: .../bin/pipeline sep prog [sep prog ...]
 100
 
 
@@ -269,14 +269,14 @@ hereur
 
 ==== bin/scrip docs takes file arguments ====
 
-bin/pipeline
+.../bin/pipeline
 
   run prog
     Execute prog
  
   pipeline sep prog [sep prog ...]
  
-bin/scrip
+.../bin/scrip
 
   help
     Print this helpful message
@@ -297,7 +297,7 @@ bin/scrip
       Copy all included dependencies to current directory
  
     make target...
-      Print Makefile rule for building bin/target from lib/target.sh
+      Print Makefile rule for building bin/target from share/scrip/target
       Lists all dependencies and uses atomic write pattern
  
   scrip code|deps|borrow|make|docs|help arg...
@@ -307,8 +307,7 @@ bin/scrip
 
 ==== bin/scrip make emits Makefile rule ====
 
-_check env SCRIP_PATH=lib bin/scrip make pipeline
-bin/pipeline: bin/scrip src/pipeline lib/pipeline.sh lib/pipewith.sh lib/do_run.sh lib/usage.sh lib/shout.sh
-	SCRIP_PATH=lib bin/scrip code src/pipeline > bin/pipeline.new && chmod a+x bin/pipeline.new && mv bin/pipeline.new bin/pipeline
+bin/pipeline: bin/scrip src/pipeline .../share/scrip/pipeline.sh .../share/scrip/pipewith.sh .../share/scrip/do_run.sh .../share/scrip/usage.sh .../share/scrip/shout.sh
+	bin/scrip code src/pipeline > bin/pipeline.new && chmod a+x bin/pipeline.new && mv bin/pipeline.new bin/pipeline
 
 0

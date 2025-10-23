@@ -6,10 +6,10 @@ include mk/needvar.mk
 .SUFFIXES: .script .cast .gif
 
 #_# bin/scrip
-#_#   Build the scrip preprocessor from lib/scrip.sh
+#_#   Build the scrip preprocessor from share/scrip/scrip.sh
 #_#
-bin/scrip: src/scrip lib/scrip.sh lib/usage.sh lib/shout.sh lib/do_help.sh
-	SCRIP_PATH=./lib /bin/sh -c '. lib/scrip.sh && do_code src/scrip' > bin/scrip.new && chmod a+x bin/scrip.new && mv bin/scrip.new bin/scrip
+bin/scrip: src/scrip share/scrip/scrip.sh share/scrip/usage.sh share/scrip/shout.sh share/scrip/do_help.sh
+	/bin/sh -c '. share/scrip/scrip.sh && do_code src/scrip' bin/scrip > bin/scrip.new && chmod a+x bin/scrip.new && mv bin/scrip.new bin/scrip
 
 #_# build
 #_#   Build executables from src/*.sh
@@ -45,8 +45,10 @@ demos: all
 #_#
 clean:
 	rm -f tests/output
+	rm -fr tests/basedir
 	rm -f demos/*.gif
 	rm -f demos/*.cast
+	rm -f build/*
 
 #_# tests
 #_#   Run test suite and diff with expected results

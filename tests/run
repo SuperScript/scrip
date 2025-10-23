@@ -8,8 +8,8 @@ export PATH
 
 scrip=scrip
 basedir="${home}/tests/basedir"
-bindir="bin"
-libdir="lib"
+bindir="${home}/bin"
+libdir="${home}/share/scrip"
 
 ####
 
@@ -60,8 +60,6 @@ cd tests
 rm -rf "${basedir}"
 
 mkdir -p "${basedir}"
-cp -r ../lib "${basedir}"
-cp -r ../bin "${basedir}"
 cp -r ../src "${basedir}"
 cd "${basedir}"
 
@@ -354,7 +352,6 @@ _run 'bin/scrip docs takes file arguments'
 _check "${bindir}/scrip" docs "${bindir}/pipeline" "${bindir}/scrip"
 
 _run 'bin/scrip make emits Makefile rule'
-echo _check env SCRIP_PATH="${libdir}" "${bindir}/scrip" make pipeline
 _check env SCRIP_PATH="${libdir}" "${bindir}/scrip" make pipeline
 
 

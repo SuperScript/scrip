@@ -19,4 +19,5 @@ The `SCRIP_PATH` environment variable holds a colon-separated list of directorie
 - [x] Use sibling lib/ as path when none set.
 - [x] Add borrow mode.
 - [x] Add make mode to create make target for program.
+- [x] Sort out default lib question.
 - [ ] Split shell-scripting skill into shell-scripting, shell-libraries, shell-programs.
