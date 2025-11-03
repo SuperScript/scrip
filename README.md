@@ -14,11 +14,3 @@ Each file is included only the first time an include statement for that file is 
 
 The `SCRIP_PATH` environment variable holds a colon-separated list of directories to search for relative file paths. Absolute paths or relative paths starting with `./` do not use `SCRIP_PATH`.
 
-## TODO
-
-- [x] Use sibling lib/ as path when none set.
-- [x] Add borrow mode.
-- [x] Add make mode to create make target for program.
-- [x] Sort out default lib question.
-- [ ] Add install target, with PREFIX.
-- [ ] Split shell-scripting skill into shell-scripting, shell-libraries, shell-programs.
