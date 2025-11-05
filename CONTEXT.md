@@ -1,31 +1,54 @@
-# Session Context
+# Context History
 
-**Last Updated:** 2025-11-03 03:39
+Quick session highlights for resuming work. Latest entries at bottom.
+
+---
+
+## Session: 2025-11-03 03:39
+
 **Branch:** master
 **Status:** dirty
 
-## What I Accomplished
+### Highlights
 
-In this session we initialized ccode and created CONTEXT.md.
+Initialized Claude Code and created initial CONTEXT.md file. Added CLAUDE.md with comprehensive project documentation covering build system, architecture, development workflow, and the include resolution mechanism that powers scrip. Set up foundation for working with Claude Code on this project.
 
-## Next Steps
+### Current State
 
-Design a tail-execution program analogous to pipewith.
+CLAUDE.md created with full project documentation. Previous CONTEXT.md format was question-based rather than session-based. Tail-execution program design planned but not started.
 
-## Blockers/Decisions
+### Next Up
 
-The main blocker is the need to experiment with how to thread results from each program in the tail exec pipeline.
+1. Design a tail-execution program analogous to pipewith
+2. Experiment with how to thread results from each program in the tail exec pipeline
 
-## Git State
+### Decisions Needed
 
-**Last Commit:** c769a0a - Update help for borrow
+How to thread results between programs in the tail exec pipeline - needs experimentation to determine best approach.
 
-**Modified Files:**
-- CLAUDE.md (untracked)
+---
 
-**Recent Commits:**
-c769a0a Update help for borrow
-520ea50 Add install target and clean up make help docs
-035d4b9 Clean up SCRIP_PATH use and defaults and move lib to share/scrip
-f7d538b Bootstrap scrip and use it to build the other programs
-a3580ad Use ./lib by default for SCRIP_PATH
+## Session: 2025-11-05 01:32
+
+**Branch:** master
+**Status:** 1 file modified (CONTEXT.md deleted)
+
+### Highlights
+
+Invoked dump-context skill to save session context. Previous CONTEXT.md has been deleted (showing in git status as deleted), indicating transition to new context format. This session is reformatting CONTEXT.md to follow the "Previously on..." TV show recap style with session-based entries rather than the old question-based format.
+
+### Current State
+
+Converting CONTEXT.md from old format to new session-based format per dump-context skill v3.0.0. CLAUDE.md already exists with comprehensive project documentation. No code changes in this session - purely documentation/context management work.
+
+### Next Up
+
+1. Design a tail-execution program analogous to pipewith (carried forward from previous session)
+2. Experiment with threading results between programs in tail exec pipeline
+3. Begin actual implementation work on the tail-execution feature
+
+### Decisions Needed
+
+Tail exec pipeline result threading approach - still needs design and experimentation.
+
+---

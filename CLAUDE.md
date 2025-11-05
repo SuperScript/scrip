@@ -164,26 +164,8 @@ Use `#_#` prefix for embedded help text that's extracted by `do_help`:
 #_#   Description of what this does
 ```
 
-## Current State
+### Context History
 
-**Last Updated:** 2025-11-03 03:39
-**Branch:** master
-**Status:** dirty
-
-### Active Work
-
-In this session we initialized ccode and created CONTEXT.md.
-
-### Next Steps
-
-Design a tail-execution program analogous to pipewith.
-
-### Open Questions
-
-The main blocker is the need to experiment with how to thread results from each program in the tail exec pipeline.
-
-### Recent Changes
-
-- CLAUDE.md (untracked)
-
-**Last Commit:** c769a0a - Update help for borrow
+See `CONTEXT.md` for session-by-session highlights of work progression.
+This file captures programmer context in "Previously on..." style for
+quick resumption of work.
