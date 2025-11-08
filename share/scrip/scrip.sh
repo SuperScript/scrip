@@ -29,11 +29,11 @@ do_docs() {
 #_#     Includes are inserted only the first time encountered
 #_#
 _mode() {
-  awk=`{ which gawk >/dev/null && echo gawk; } \
+  awk="$({ which gawk >/dev/null && echo gawk; } \
     || { which nawk >/dev/null && echo nawk; } \
-    || echo awk`
+    || echo awk)"
 
-  exec $awk -v default_path="$(dirname "$(dirname "$0")")/share/scrip" '
+  exec "${awk}" -v default_path="$(dirname "$(dirname "$0")")/share/scrip" '
   function shout(msg) { print "scrip: " msg | "cat - 1>&2"; }
   function barf(msg) { shout("fatal: " msg); exit 111; }
   function findfile(fname,  path,dirs,i,fullpath) {
