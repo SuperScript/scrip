@@ -396,6 +396,17 @@ do_to "multi.txt" run printf '%s\n' "line1" "line2" "line3"
 cat "multi.txt"
 EOF
 
+_run 'do_to creates directories'
+_check_prog do_to_prefix sh <<'EOF'
+#!/bin/sh
+#include "do_to.sh"
+do_echo() {
+  echo "do_echo was called with: $*"
+}
+do_to "do-to-test/foo/bar/directory_test.txt" echo "hello world"
+cat "prefix_test.txt"
+EOF
+
 
 exit 0
 
