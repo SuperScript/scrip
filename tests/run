@@ -354,6 +354,48 @@ _check "${bindir}/scrip" docs "${bindir}/pipeline" "${bindir}/scrip"
 _run 'bin/scrip make emits Makefile rule'
 _check env SCRIP_PATH="${libdir}" "${bindir}/scrip" make pipeline
 
+_run 'do_to writes output atomically on success'
+_check_prog do_to_test sh <<'EOF'
+#!/bin/sh
+#include "do_to.sh"
+#include "do_run.sh"
+do_to "output.txt" run echo "test content"
+cat "output.txt"
+EOF
+
+_run 'do_to cleans up on failure'
+_check_prog do_to_fail sh <<'EOF'
+#!/bin/sh
+#include "do_to.sh"
+#include "do_run.sh"
+(do_to "fail_output.txt" run false)
+if [ -f "fail_output.txt" ]; then
+  echo "ERROR: fail_output.txt should not exist"
+else
+  echo "OK: fail_output.txt does not exist"
+fi
+EOF
+
+_run 'do_to calls do_ prefixed function'
+_check_prog do_to_prefix sh <<'EOF'
+#!/bin/sh
+#include "do_to.sh"
+do_echo() {
+  echo "do_echo was called with: $*"
+}
+do_to "prefix_test.txt" echo "hello world"
+cat "prefix_test.txt"
+EOF
+
+_run 'do_to with multi-argument command'
+_check_prog do_to_multiarg sh <<'EOF'
+#!/bin/sh
+#include "do_to.sh"
+#include "do_run.sh"
+do_to "multi.txt" run printf '%s\n' "line1" "line2" "line3"
+cat "multi.txt"
+EOF
+
 
 exit 0
 
