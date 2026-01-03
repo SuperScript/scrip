@@ -407,6 +407,39 @@ do_to "do-to-test/foo/bar/directory_test.txt" echo "hello world"
 cat "prefix_test.txt"
 EOF
 
+_run 'bin/scrip prog requires arguments'
+_check ${scrip} prog
+
+_run 'bin/scrip prog requires at least two arguments'
+_check ${scrip} prog script.sh
+
+_run 'bin/scrip prog creates executable script'
+cat - > "${basedir}/prog_test.sh" <<'EOF'
+#!/bin/sh
+#include "shout.sh"
+shout "hello from prog test"
+EOF
+_check env SCRIP_PATH="${libdir}" ${scrip} prog "${basedir}/prog_output" "${basedir}/prog_test.sh"
+
+_run 'bin/scrip prog output resolves includes'
+_check head -n 5 "${basedir}/prog_output"
+
+_run 'bin/scrip prog output is executable'
+_check "${basedir}/prog_output"
+
+_run 'bin/scrip prog with multiple source files'
+cat - > "${basedir}/prog_multi1.sh" <<'EOF'
+#!/bin/sh
+#include "shout.sh"
+shout "prog_multi1.sh"
+EOF
+cat - > "${basedir}/prog_multi2.sh" <<'EOF'
+#include "shout.sh"
+shout "prog_multi2.sh"
+EOF
+_check env SCRIP_PATH="${libdir}" ${scrip} prog "${basedir}/prog_multi_output" "${basedir}/prog_multi1.sh" "${basedir}/prog_multi2.sh"
+_check "${basedir}/prog_multi_output"
+
 
 exit 0
 

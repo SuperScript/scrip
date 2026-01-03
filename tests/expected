@@ -11,24 +11,29 @@
   help
     Print this helpful message
  
-  docs file ...
+  docs [file ...]
     Print help for each file argument
+    Run on $0 if no files given
  
-    deps file...
-      Print the list of included file paths
-      Path is printed only the first time encountered
-      Paths are sorted by order of encounter
+  deps file...
+    Print the list of included file paths
+    Path is printed only the first time encountered
+    Paths are sorted by order of encounter
  
-    code file...
-      Print the code in files, resolving includes
-      Includes are inserted only the first time encountered
+  code file...
+    Print the code in files, resolving includes
+    Includes are inserted only the first time encountered
  
-    borrow destdir file...
-      Copy all included dependencies to destdir
+  prog script file...
+    Render the files, resolving includes output to script
+    Write script with mode 0755
  
-    make target...
-      Print Makefile rule for building bin/target from share/scrip/target
-      Lists all dependencies and uses atomic write pattern
+  borrow destdir file...
+    Copy all included dependencies to destdir
+ 
+  make target...
+    Print Makefile rule for building each bin/target from share/scrip/target
+    Lists all dependencies and uses atomic write pattern
  
   scrip code|deps|borrow|make|docs|help arg...
  
@@ -281,24 +286,29 @@ hereur
   help
     Print this helpful message
  
-  docs file ...
+  docs [file ...]
     Print help for each file argument
+    Run on $0 if no files given
  
-    deps file...
-      Print the list of included file paths
-      Path is printed only the first time encountered
-      Paths are sorted by order of encounter
+  deps file...
+    Print the list of included file paths
+    Path is printed only the first time encountered
+    Paths are sorted by order of encounter
  
-    code file...
-      Print the code in files, resolving includes
-      Includes are inserted only the first time encountered
+  code file...
+    Print the code in files, resolving includes
+    Includes are inserted only the first time encountered
  
-    borrow destdir file...
-      Copy all included dependencies to destdir
+  prog script file...
+    Render the files, resolving includes output to script
+    Write script with mode 0755
  
-    make target...
-      Print Makefile rule for building bin/target from share/scrip/target
-      Lists all dependencies and uses atomic write pattern
+  borrow destdir file...
+    Copy all included dependencies to destdir
+ 
+  make target...
+    Print Makefile rule for building each bin/target from share/scrip/target
+    Lists all dependencies and uses atomic write pattern
  
   scrip code|deps|borrow|make|docs|help arg...
  
@@ -308,7 +318,7 @@ hereur
 ==== bin/scrip make emits Makefile rule ====
 
 bin/pipeline: bin/scrip src/pipeline .../share/scrip/pipeline.sh .../share/scrip/pipewith.sh .../share/scrip/do_run.sh .../share/scrip/usage.sh .../share/scrip/shout.sh
-	bin/scrip code src/pipeline > bin/pipeline.new && chmod a+x bin/pipeline.new && mv bin/pipeline.new bin/pipeline
+	bin/scrip prog bin/pipeline src/pipeline
 
 0
 
@@ -342,4 +352,43 @@ line3
 ==== do_to creates directories ====
 
 do_echo was called with: hello world
+0
+
+
+==== bin/scrip prog requires arguments ====
+
+.../bin/scrip: usage: prog script [file...]
+100
+
+
+==== bin/scrip prog requires at least two arguments ====
+
+.../bin/scrip: usage: prog script [file...]
+100
+
+
+==== bin/scrip prog creates executable script ====
+
+0
+
+
+==== bin/scrip prog output resolves includes ====
+
+#!/bin/sh
+shout() { printf '%s\n' "$0: $*" >&2; }
+shout "hello from prog test"
+0
+
+
+==== bin/scrip prog output is executable ====
+
+.../tests/basedir/prog_output: hello from prog test
+0
+
+
+==== bin/scrip prog with multiple source files ====
+
+0
+.../tests/basedir/prog_multi_output: prog_multi1.sh
+.../tests/basedir/prog_multi_output: prog_multi2.sh
 0

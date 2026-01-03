@@ -1,8 +1,10 @@
 #include "usage.sh"
 #include "do_help.sh"
+#include "atomic_to_mode.sh"
 
-#_# docs file ...
+#_# docs [file ...]
 #_#   Print help for each file argument
+#_#   Run on $0 if no files given
 #_#
 do_docs() {
   if test $# -gt 0
@@ -18,22 +20,15 @@ do_docs() {
   fi
 }
 
-#_#   deps file...
-#_#     Print the list of included file paths
-#_#     Path is printed only the first time encountered
-#_#     Paths are sorted by order of encounter
-#_#
-
-#_#   code file...
-#_#     Print the code in files, resolving includes
-#_#     Includes are inserted only the first time encountered
-#_#
+# _mode code|deps
+#   code: render #includes recursively and write code to stdout
+#   deps: print list of dependencies, one per line
 _mode() {
   awk="$({ which gawk >/dev/null && echo gawk; } \
     || { which nawk >/dev/null && echo nawk; } \
     || echo awk)"
 
-  exec "${awk}" -v default_path="$(dirname "$(dirname "$0")")/share/scrip" '
+  "${awk}" -v default_path="$(dirname "$(dirname "$0")")/share/scrip" '
   function shout(msg) { print "scrip: " msg | "cat - 1>&2"; }
   function barf(msg) { shout("fatal: " msg); exit 111; }
   function findfile(fname,  path,dirs,i,fullpath) {
@@ -113,18 +108,41 @@ _mode() {
   ' "$@"
 }
 
+#_# deps file...
+#_#   Print the list of included file paths
+#_#   Path is printed only the first time encountered
+#_#   Paths are sorted by order of encounter
+#_#
 do_deps() {
+  test $# -ge 1 || usage 'code [file...]'
   _mode deps "$@"
 }
 
+#_# code file...
+#_#   Print the code in files, resolving includes
+#_#   Includes are inserted only the first time encountered
+#_#
 do_code() {
+  test $# -ge 1 || usage 'code [file...]'
   _mode code "$@"
 }
 
-#_#   borrow destdir file...
-#_#     Copy all included dependencies to destdir
+#_# prog script file...
+#_#   Render the files, resolving includes output to script
+#_#   Write script with mode 0755
+#_#
+do_prog() {
+  test $# -ge 2 || usage 'prog script [file...]'
+  local script="$1"
+  shift
+  atomic_to_mode "${script}" 0755 _mode code "$@"
+}
+
+#_# borrow destdir file...
+#_#   Copy all included dependencies to destdir
 #_#
 do_borrow() {
+  test $# -ge 1 || usage 'borrow destdir [file...]'
   local dest="$1"
   shift
   mkdir -p "${dest}"
@@ -134,9 +152,9 @@ do_borrow() {
   done
 }
 
-#_#   make target...
-#_#     Print Makefile rule for building bin/target from share/scrip/target
-#_#     Lists all dependencies and uses atomic write pattern
+#_# make target...
+#_#   Print Makefile rule for building each bin/target from share/scrip/target
+#_#   Lists all dependencies and uses atomic write pattern
 #_#
 do_make() {
   for name in "$@"
@@ -154,8 +172,7 @@ do_make() {
     printf '\n'
 
     # Emit build command with tab prefix and atomic write pattern
-    printf '\tbin/scrip code %s > %s.new && chmod a+x %s.new && mv %s.new %s\n' \
-      "${src}" "${target}" "${target}" "${target}" "${target}"
+    printf '\tbin/scrip prog %s %s\n' "${target}" "${src}"
     printf '\n'
   done
 }
