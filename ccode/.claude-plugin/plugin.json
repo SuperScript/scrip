@@ -3,10 +3,8 @@
   "version": "1.0.0",
   "description": "SuperScript shell scripting assistant - POSIX-compliant scripts with rigorous style, modular composition via #include, and automated validation",
   "author": {
-    "name": "scrip contributors",
-    "url": "https://github.com/sst/scrip"
+    "name": "scrip contributors"
   },
-  "repository": "https://github.com/sst/scrip",
   "license": "BSD-3-Clause",
   "keywords": ["shell", "scripting", "posix", "superscript", "validation", "composition", "includes"]
 }

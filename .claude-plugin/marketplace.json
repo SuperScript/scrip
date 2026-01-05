@@ -1,6 +1,6 @@
 {
   "name": "sst-scrip",
-  "description": "Shell scripting for Claude Code",
+  "description": "Shell scripts in SuperScript style",
   "owner": {
     "name": "SuperScript",
     "email": "ai@superscript.com"
@@ -10,11 +10,7 @@
       "name": "scrip",
       "description": "Shell scripting for Claude Code",
       "version": "1.0.0",
-      "source": "./ccode",
-      "author": {
-        "name": "AI Masters",
-        "email": "ai@superscript.com"
-      }
+      "source": "./ccode"
     }
   ]
 }
