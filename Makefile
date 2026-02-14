@@ -24,14 +24,16 @@ all: bin/scrip src/*
 #_# .script.cast
 #_#   Capture an asciinema recording of the source script
 #_#
-.script.cast: all
+.script.cast:
+	@$(MAKE) all
 	@rm -f "$@"
 	@bin/asciinema-script cast "$@" < $<
 
 #_# .cast.gif
 #_#   Create a .gif file from the .cast recording
 #_#
-.cast.gif: all
+.cast.gif:
+	@$(MAKE) all
 	@bin/asciinema-script gif $< "$@"
 
 #_# demos
