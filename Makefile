@@ -34,6 +34,7 @@ $(_NEEDVAR_TARGETS):
 #_#   Build the scrip preprocessor from share/scrip/scrip.sh
 #_#
 bin/scrip: src/scrip share/scrip/scrip.sh share/scrip/usage.sh share/scrip/shout.sh share/scrip/do_help.sh
+	@mkdir -p bin
 	@/bin/sh -c '. share/scrip/scrip.sh && do_code src/scrip' bin/scrip > bin/scrip.new && chmod a+x bin/scrip.new && mv bin/scrip.new bin/scrip
 
 # #_# all
