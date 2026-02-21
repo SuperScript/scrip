@@ -5,7 +5,7 @@
 	xelatex --shell-escape -interaction=batchmode "$<"
 
 #_# TARGET.show
-#_#   View TARGET.pdf in xpdf
+#_#   View TARGET.pdf in browser
 #_#
 # Attempting to preserve the current focus here fails. Why?
 .pdf.show: Makefile $<
