@@ -1,7 +1,10 @@
 #_# needvar.X
 #_#   Check whether $(X) is nonempty
-#_#   Add X to needvars to enable
 #_#
+#_#   Config: Set needvars to the list of X values to enable
+
+needvars :=
+
 _NEEDVAR_TARGETS != for v in $(needvars); do printf 'needvar.%s ' "$$v"; done
 _NEEDVAR_LOOKUP != for v in $(needvars); do printf '%s) val='"'"'$$(%s)'"'"';; ' "$$v" "$$v"; done
 

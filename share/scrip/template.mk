@@ -1,7 +1,5 @@
 # Makefile
 
-needvars :=
-
 ####
 
 #include "help.mk"
