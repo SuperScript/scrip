@@ -14,6 +14,7 @@
 #include "atomic_to_mode.sh"
 #include "do_help.sh"
 #include "do_run.sh"
+#include "do_set.sh"
 #include "do_xrun.sh"
 
 #### program functions

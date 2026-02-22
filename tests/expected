@@ -355,6 +355,51 @@ do_echo was called with: hello world
 0
 
 
+==== do_set with no options dispatches tail ====
+
+hello from do_set
+0
+
+
+==== do_set applies single option ====
+
+trace: off
+trace: on
+0
+
+
+==== do_set turns off option with + ====
+
+trace: off
+0
+
+
+==== do_set applies multiple options ====
+
+nounset: on
+trace: on
+0
+
+
+==== do_set -o handles two-argument option ====
+
+trace: on
+0
+
+
+==== do_set composes with do_to ====
+
++ cat set_output.txt
+trace: on
+0
+
+
+==== do_set via do_ dispatch ====
+
+trace: on
+0
+
+
 ==== bin/scrip prog requires arguments ====
 
 .../bin/scrip: usage: prog script [file...]

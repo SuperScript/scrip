@@ -407,6 +407,108 @@ do_to "do-to-test/foo/bar/directory_test.txt" echo "hello world"
 cat "prefix_test.txt"
 EOF
 
+_run 'do_set with no options dispatches tail'
+_check_prog do_set_noopt sh <<'EOF'
+#!/bin/sh
+#include "do_.sh"
+#include "do_set.sh"
+#include "do_run.sh"
+do_set run echo "hello from do_set"
+EOF
+
+_run 'do_set applies single option'
+_check_prog do_set_single sh <<'EOF'
+#!/bin/sh
+#include "do_.sh"
+#include "do_set.sh"
+do_show_x() {
+  case "$-" in
+    *x*) echo "trace: on" ;;
+    *)   echo "trace: off" ;;
+  esac
+}
+do_set +x show_x 2>/dev/null
+do_set -x show_x 2>/dev/null
+EOF
+
+_run 'do_set turns off option with +'
+_check_prog do_set_off sh <<'EOF'
+#!/bin/sh
+#include "do_.sh"
+#include "do_set.sh"
+do_show_x() {
+  case "$-" in
+    *x*) echo "trace: on" ;;
+    *)   echo "trace: off" ;;
+  esac
+}
+exec 2>/dev/null
+set -x
+do_set +x show_x
+EOF
+
+_run 'do_set applies multiple options'
+_check_prog do_set_multi sh <<'EOF'
+#!/bin/sh
+#include "do_.sh"
+#include "do_set.sh"
+do_show_xu() {
+  case "$-" in
+    *u*) echo "nounset: on" ;;
+    *)   echo "nounset: off" ;;
+  esac
+  case "$-" in
+    *x*) echo "trace: on" ;;
+    *)   echo "trace: off" ;;
+  esac
+}
+do_set -u -x show_xu 2>/dev/null
+EOF
+
+_run 'do_set -o handles two-argument option'
+_check_prog do_set_opt_o sh <<'EOF'
+#!/bin/sh
+#include "do_.sh"
+#include "do_set.sh"
+do_show_x() {
+  case "$-" in
+    *x*) echo "trace: on" ;;
+    *)   echo "trace: off" ;;
+  esac
+}
+do_set -o xtrace show_x 2>/dev/null
+EOF
+
+_run 'do_set composes with do_to'
+_check_prog do_set_compose sh <<'EOF'
+#!/bin/sh
+#include "do_.sh"
+#include "do_set.sh"
+#include "do_to.sh"
+do_show_x() {
+  case "$-" in
+    *x*) echo "trace: on" ;;
+    *)   echo "trace: off" ;;
+  esac
+}
+do_to "set_output.txt" set -x show_x 2>/dev/null
+cat "set_output.txt"
+EOF
+
+_run 'do_set via do_ dispatch'
+_check_prog do_set_dispatch sh <<'EOF'
+#!/bin/sh
+#include "do_.sh"
+#include "do_set.sh"
+do_show_x() {
+  case "$-" in
+    *x*) echo "trace: on" ;;
+    *)   echo "trace: off" ;;
+  esac
+}
+do_ set -x show_x 2>/dev/null
+EOF
+
 _run 'bin/scrip prog requires arguments'
 _check ${scrip} prog
 
