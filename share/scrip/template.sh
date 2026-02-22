@@ -12,6 +12,7 @@
 #include "do_.sh"
 #include "atomic_to.sh"
 #include "atomic_to_mode.sh"
+#include "do_env.sh"
 #include "do_help.sh"
 #include "do_run.sh"
 #include "do_set.sh"

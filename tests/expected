@@ -387,9 +387,9 @@ trace: on
 0
 
 
-==== do_set composes with do_to ====
+==== do_set chains with do_env ====
 
-+ cat set_output.txt
+VAR=hello
 trace: on
 0
 
@@ -397,6 +397,37 @@ trace: on
 ==== do_set via do_ dispatch ====
 
 trace: on
+0
+
+
+==== do_env with no vars dispatches tail ====
+
+hello from do_env
+0
+
+
+==== do_env exports single variable ====
+
+VAR=hello
+0
+
+
+==== do_env exports multiple variables ====
+
+A=1 B=2
+0
+
+
+==== do_env chains with do_set ====
+
+VAR=hello
+trace: on
+0
+
+
+==== do_env via do_ dispatch ====
+
+VAR=hello
 0
 
 

@@ -479,20 +479,20 @@ do_show_x() {
 do_set -o xtrace show_x 2>/dev/null
 EOF
 
-_run 'do_set composes with do_to'
+_run 'do_set chains with do_env'
 _check_prog do_set_compose sh <<'EOF'
 #!/bin/sh
 #include "do_.sh"
 #include "do_set.sh"
-#include "do_to.sh"
-do_show_x() {
+#include "do_env.sh"
+do_show() {
+  echo "VAR=${VAR}"
   case "$-" in
     *x*) echo "trace: on" ;;
     *)   echo "trace: off" ;;
   esac
 }
-do_to "set_output.txt" set -x show_x 2>/dev/null
-cat "set_output.txt"
+do_set -x env VAR=hello show 2>/dev/null
 EOF
 
 _run 'do_set via do_ dispatch'
@@ -507,6 +507,64 @@ do_show_x() {
   esac
 }
 do_ set -x show_x 2>/dev/null
+EOF
+
+_run 'do_env with no vars dispatches tail'
+_check_prog do_env_novar sh <<'EOF'
+#!/bin/sh
+#include "do_.sh"
+#include "do_env.sh"
+#include "do_run.sh"
+do_env run echo "hello from do_env"
+EOF
+
+_run 'do_env exports single variable'
+_check_prog do_env_single sh <<'EOF'
+#!/bin/sh
+#include "do_.sh"
+#include "do_env.sh"
+do_show_var() {
+  echo "VAR=${VAR}"
+}
+do_env VAR=hello show_var
+EOF
+
+_run 'do_env exports multiple variables'
+_check_prog do_env_multi sh <<'EOF'
+#!/bin/sh
+#include "do_.sh"
+#include "do_env.sh"
+do_show_vars() {
+  echo "A=${A} B=${B}"
+}
+do_env A=1 B=2 show_vars
+EOF
+
+_run 'do_env chains with do_set'
+_check_prog do_env_chain sh <<'EOF'
+#!/bin/sh
+#include "do_.sh"
+#include "do_env.sh"
+#include "do_set.sh"
+do_show_var_x() {
+  echo "VAR=${VAR}"
+  case "$-" in
+    *x*) echo "trace: on" ;;
+    *)   echo "trace: off" ;;
+  esac
+}
+do_env VAR=hello set -x show_var_x 2>/dev/null
+EOF
+
+_run 'do_env via do_ dispatch'
+_check_prog do_env_dispatch sh <<'EOF'
+#!/bin/sh
+#include "do_.sh"
+#include "do_env.sh"
+do_show_var() {
+  echo "VAR=${VAR}"
+}
+do_ env VAR=hello show_var
 EOF
 
 _run 'bin/scrip prog requires arguments'
