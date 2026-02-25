@@ -6,3 +6,4 @@ bin/
 demos/*.cast
 demos/*.gif
 build/
+.claude*
