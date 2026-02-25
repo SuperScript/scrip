@@ -606,5 +606,22 @@ _check env SCRIP_PATH="/custom/path" ${scrip} path
 _run 'bin/scrip path prints default path when SCRIP_PATH unset'
 _check env -u SCRIP_PATH ${scrip} path
 
+mkdir -p "${basedir}/listlib1"
+touch "${basedir}/listlib1/alpha.sh" "${basedir}/listlib1/beta.sh" "${basedir}/listlib1/gamma.awk"
+mkdir -p "${basedir}/listlib2"
+touch "${basedir}/listlib2/delta.sh"
+
+_run 'bin/scrip list shows files in SCRIP_PATH'
+_check_sort env SCRIP_PATH="${basedir}/listlib1" ${scrip} list
+
+_run 'bin/scrip list filters by regex'
+_check_sort env SCRIP_PATH="${basedir}/listlib1" ${scrip} list '\.awk$'
+
+_run 'bin/scrip list with no matches prints nothing'
+_check env SCRIP_PATH="${basedir}/listlib1" ${scrip} list 'zzz_no_match'
+
+_run 'bin/scrip list searches multiple SCRIP_PATH directories'
+_check_sort env SCRIP_PATH="${basedir}/listlib1:${basedir}/listlib2" ${scrip} list
+
 exit 0
 

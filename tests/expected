@@ -2,7 +2,7 @@
 
 ==== bin/scrip prints usage ====
 
-.../bin/scrip: usage: .../bin/scrip code|deps|borrow|make|docs|help arg...
+.../bin/scrip: usage: .../bin/scrip code|deps|borrow|list|make|docs|help arg...
 100
 
 
@@ -37,6 +37,10 @@
  
   path
     Copy all included dependencies to destdir
+ 
+  list [regex]
+    List files in SCRIP_PATH directories
+    Filtered by regex on basename (default: .*)
  
   scrip code|deps|borrow|make|docs|help arg...
  
@@ -316,6 +320,10 @@ hereur
   path
     Copy all included dependencies to destdir
  
+  list [regex]
+    List files in SCRIP_PATH directories
+    Filtered by regex on basename (default: .*)
+ 
   scrip code|deps|borrow|make|docs|help arg...
  
 0
@@ -485,4 +493,32 @@ shout "hello from prog test"
 ==== bin/scrip path prints default path when SCRIP_PATH unset ====
 
 .../share/scrip
+0
+
+
+==== bin/scrip list shows files in SCRIP_PATH ====
+
+.../tests/basedir/listlib1/alpha.sh
+.../tests/basedir/listlib1/beta.sh
+.../tests/basedir/listlib1/gamma.awk
+0
+
+
+==== bin/scrip list filters by regex ====
+
+.../tests/basedir/listlib1/gamma.awk
+0
+
+
+==== bin/scrip list with no matches prints nothing ====
+
+0
+
+
+==== bin/scrip list searches multiple SCRIP_PATH directories ====
+
+.../tests/basedir/listlib1/alpha.sh
+.../tests/basedir/listlib1/beta.sh
+.../tests/basedir/listlib1/gamma.awk
+.../tests/basedir/listlib2/delta.sh
 0

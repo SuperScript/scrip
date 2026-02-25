@@ -188,3 +188,16 @@ do_path() {
   printf '%s\n' "${SCRIP_PATH:-$(dirname $(dirname "$0"))/share/scrip}"
 }
 
+#_# list [regex]
+#_#   List files in SCRIP_PATH directories
+#_#   Filtered by regex on basename (default: .*)
+#_#
+do_list() {
+  local regex="${1:-.*}"
+  do_path | tr ':' '\n' | while read -r dir
+  do
+    test -d "${dir}" || continue
+    fd -t f -d 1 "${regex}" "${dir}"
+  done
+}
+
