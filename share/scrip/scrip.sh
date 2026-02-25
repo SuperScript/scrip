@@ -2,9 +2,9 @@
 #include "do_help.sh"
 #include "atomic_to_mode.sh"
 
-#_# docs [file ...]
-#_#   Print help for each file argument
-#_#   Run on $0 if no files given
+#_# docs [path ...]
+#_#   Print help for each path argument
+#_#   Run on $0 if no paths given
 #_#
 do_docs() {
   if test $# -gt 0
