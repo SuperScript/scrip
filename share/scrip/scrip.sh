@@ -31,10 +31,7 @@ _mode() {
   "${awk}" -v default_path="$(dirname "$(dirname "$0")")/share/scrip" '
   function shout(msg) { print "scrip: " msg | "cat - 1>&2"; }
   function barf(msg) { shout("fatal: " msg); exit 111; }
-  function findfile(fname,  path,dirs,i,fullpath) {
-    # If fname contains a slash or starts with ./, use as-is
-    if (fname ~ /[\/]/ || fname ~ /^\.\//) return fname
-
+  function scrip_path() {
     # Get search path from environment
     path = ENVIRON["SCRIP_PATH"]
 
@@ -43,7 +40,14 @@ _mode() {
       path = default_path
     }
 
+    return path
+  }
+  function findfile(fname,  path,dirs,i,fullpath) {
+    # If fname contains a slash or starts with ./, use as-is
+    if (fname ~ /[\/]/ || fname ~ /^\.\//) return fname
+
     # Split path and search each directory
+    path = scrip_path()
     split(path, dirs, ":")
     for (i in dirs) {
       if (dirs[i] == "") continue
@@ -175,5 +179,12 @@ do_make() {
     printf '\tbin/scrip prog %s %s\n' "${target}" "${src}"
     printf '\n'
   done
+}
+
+#_# path
+#_#   Copy all included dependencies to destdir
+#_#
+do_path() {
+  printf '%s\n' "${SCRIP_PATH:-$(dirname $(dirname "$0"))/share/scrip}"
 }
 

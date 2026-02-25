@@ -35,6 +35,9 @@
     Print Makefile rule for building each bin/target from share/scrip/target
     Lists all dependencies and uses atomic write pattern
  
+  path
+    Copy all included dependencies to destdir
+ 
   scrip code|deps|borrow|make|docs|help arg...
  
 0
@@ -310,6 +313,9 @@ hereur
     Print Makefile rule for building each bin/target from share/scrip/target
     Lists all dependencies and uses atomic write pattern
  
+  path
+    Copy all included dependencies to destdir
+ 
   scrip code|deps|borrow|make|docs|help arg...
  
 0
@@ -467,4 +473,16 @@ shout "hello from prog test"
 0
 .../tests/basedir/prog_multi_output: prog_multi1.sh
 .../tests/basedir/prog_multi_output: prog_multi2.sh
+0
+
+
+==== bin/scrip path prints SCRIP_PATH when set ====
+
+/custom/path
+0
+
+
+==== bin/scrip path prints default path when SCRIP_PATH unset ====
+
+.../share/scrip
 0

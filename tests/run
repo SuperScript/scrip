@@ -600,6 +600,11 @@ EOF
 _check env SCRIP_PATH="${libdir}" ${scrip} prog "${basedir}/prog_multi_output" "${basedir}/prog_multi1.sh" "${basedir}/prog_multi2.sh"
 _check "${basedir}/prog_multi_output"
 
+_run 'bin/scrip path prints SCRIP_PATH when set'
+_check env SCRIP_PATH="/custom/path" ${scrip} path
+
+_run 'bin/scrip path prints default path when SCRIP_PATH unset'
+_check env -u SCRIP_PATH ${scrip} path
 
 exit 0
 

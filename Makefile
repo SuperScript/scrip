@@ -37,10 +37,9 @@ bin/scrip: src/scrip share/scrip/scrip.sh share/scrip/usage.sh share/scrip/shout
 	@mkdir -p bin
 	@/bin/sh -c '. share/scrip/scrip.sh && do_code src/scrip' bin/scrip > bin/scrip.new && chmod a+x bin/scrip.new && mv bin/scrip.new bin/scrip
 
-# #_# all
-# #_#   Build executables for all sources in src/*
-# #_#
-
+#_# all
+#_#   Build executables for all sources in src/*
+#_#
 all: bin/scrip src/*
 	@for f in src/*; do f="$${f#src/}" && test "$$f" = 'scrip' || bin/scrip prog "bin/$$f" "src/$$f"; done
 
