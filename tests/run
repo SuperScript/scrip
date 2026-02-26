@@ -81,6 +81,12 @@ _check env SCRIP_PATH="${libdir}" ${scrip} deps "${basedir}/scriptest"
 _run 'bin/scrip code resolves includes'
 _check env SCRIP_PATH="${libdir}" ${scrip} code "${basedir}/scriptest"
 
+_run 'bin/scrip deps reads stdin when no files given'
+_check env SCRIP_PATH="${libdir}" ${scrip} deps < "${basedir}/scriptest"
+
+_run 'bin/scrip code reads stdin when no files given'
+_check env SCRIP_PATH="${libdir}" ${scrip} code < "${basedir}/scriptest"
+
 _run 'bin/scrip borrow copies dependencies to current directory'
 mkdir -p "${basedir}/borrow"
 _check env SCRIP_PATH="${libdir}" ${scrip} borrow "${basedir}/borrow" safe.sh barf.sh shout.sh
@@ -237,45 +243,40 @@ _run 'pipewith with single command (with separator)'
 _check_prog pipewith_single sh <<'EOF'
 #!/bin/sh
 #include "pipewith.sh"
-show() {
-  printf '%s\n' "pipewith: $*" >&2
+doit() {
   "$@"
 }
-pipewith show '|' echo "no pipe here"
+pipewith doit '|' echo "no pipe here"
 EOF
 
 _run 'pipewith with single command (without separator)'
 _check_prog pipewith_single sh <<'EOF'
 #!/bin/sh
 #include "pipewith.sh"
-show() {
-  printf '%s\n' "pipewith: $*" >&2
+doit() {
   "$@"
 }
-pipewith show '' echo "no pipe here"
+pipewith doit '' echo "no pipe here"
 EOF
 
 _run 'pipewith pipes two commands'
 _check_prog pipewith_simple sh <<'EOF'
 #!/bin/sh
 #include "pipewith.sh"
-show() {
-  printf '%s\n' "pipewith: $*" >&2
+doit() {
   "$@"
 }
-pipewith show '|' echo 'hello world' '|' sed 's/^h/H/'
+pipewith doit '|' echo 'hello world' '|' sed 's/^h/H/'
 EOF
 
 _run 'pipewith chains multiple commands'
 _check_prog pipewith_multi sh <<'EOF'
 #!/bin/sh
 #include "pipewith.sh"
-show() {
-  printf '%s ' pipewith: "$@" >&2
-  printf '\n' >&2
+doit() {
   "$@"
 }
-pipewith show :: printf '%s\n' line3 line2 line1 :: sort :: head -n 1
+pipewith doit :: printf '%s\n' line3 line2 line1 :: sort :: head -n 1
 EOF
 
 _run 'pipeline with single command (with separator)'

@@ -2,12 +2,5 @@
 
 #include "scrip.sh"
 
-#_# scrip code|deps|borrow|make|docs|help arg...
-#_#
+do_main "$@"
 
-if test $# -lt 1
-then
-  usage "$0 code|deps|borrow|list|make|docs|help arg..."
-fi
-
-"do_$@"

@@ -15,14 +15,16 @@
     Print help for each path argument
     Run on $0 if no paths given
  
-  deps file...
+  deps [file...]
     Print the list of included file paths
     Path is printed only the first time encountered
     Paths are sorted by order of encounter
+    Read from stdin if no files given
  
-  code file...
+  code [file...]
     Print the code in files, resolving includes
     Includes are inserted only the first time encountered
+    Read from stdin if no files given
  
   prog script file...
     Render the files, resolving includes output to script
@@ -42,8 +44,6 @@
     List files in SCRIP_PATH directories
     Filtered by regex on basename (default: .*)
  
-  scrip code|deps|borrow|make|docs|help arg...
- 
 0
 
 
@@ -57,6 +57,25 @@
 
 
 ==== bin/scrip code resolves includes ====
+
+#!/bin/sh
+shout() { printf '%s\n' "$0: $*" >&2; }
+barf() { shout "fatal: $*"; exit 111; }
+safe() { "$@" || barf "cannot $*"; }
+safe nosuchprogram
+0
+
+
+==== bin/scrip deps reads stdin when no files given ====
+
+-
+.../share/scrip/safe.sh
+.../share/scrip/barf.sh
+.../share/scrip/shout.sh
+0
+
+
+==== bin/scrip code reads stdin when no files given ====
 
 #!/bin/sh
 shout() { printf '%s\n' "$0: $*" >&2; }
@@ -183,31 +202,24 @@ X: THEREUGO
 
 ==== pipewith with single command (with separator) ====
 
-pipewith: echo no pipe here
 no pipe here
 0
 
 
 ==== pipewith with single command (without separator) ====
 
-pipewith: echo no pipe here
 no pipe here
 0
 
 
 ==== pipewith pipes two commands ====
 
-pipewith: echo hello world
-pipewith: sed s/^h/H/
 Hello world
 0
 
 
 ==== pipewith chains multiple commands ====
 
-pipewith: printf %s\n line3 line2 line1 
-pipewith: sort 
-pipewith: head -n 1 
 line1
 0
 
@@ -297,14 +309,16 @@ hereur
     Print help for each path argument
     Run on $0 if no paths given
  
-  deps file...
+  deps [file...]
     Print the list of included file paths
     Path is printed only the first time encountered
     Paths are sorted by order of encounter
+    Read from stdin if no files given
  
-  code file...
+  code [file...]
     Print the code in files, resolving includes
     Includes are inserted only the first time encountered
+    Read from stdin if no files given
  
   prog script file...
     Render the files, resolving includes output to script
@@ -323,8 +337,6 @@ hereur
   list [regex]
     List files in SCRIP_PATH directories
     Filtered by regex on basename (default: .*)
- 
-  scrip code|deps|borrow|make|docs|help arg...
  
 0
 

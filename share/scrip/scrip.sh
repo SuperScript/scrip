@@ -61,12 +61,13 @@ _mode() {
     # Fall back to original name
     return fname
   }
-  function dofile(fname,  i,x,a,realfname) {
+  function dofile(fname,  i,x,a,realfname,r) {
     # Skip if file was seen already
     if (1 == included[fname]) return
 
     # Find the actual file path
-    realfname = findfile(fname)
+    if (fname == "-") realfname = "-"
+    else realfname = findfile(fname)
 
     # Print name for deps mode
     if (deps) print realfname
@@ -75,12 +76,13 @@ _mode() {
     # Nest into dependency
     i = 0
     while (1) {
-      r = getline x <realfname
-      if (0 > r) barf("cannot open file: " realfname)
+      if (fname == "-") r = (getline x)
+      else r = (getline x <realfname)
+      if (0 > r) barf("cannot " (fname == "-" ? "read stdin" : "open file: " realfname))
       if (0 == r) break
       line[i++,fname] = x;
     }
-    close(realfname)
+    if (fname != "-") close(realfname)
     lim[fname] = i
 
     # Process nested includes
@@ -104,7 +106,9 @@ _mode() {
     mode ~ /^(deps|code)$/  || barf("unrecognized mode: " mode)
     deps = ("deps" == mode ? 1 : 0)
     for (i = 2;i < ARGC;++i) {
-      dofile(ARGV[i]);
+      f = ARGV[i]
+      ARGV[i] = ""
+      dofile(f);
     }
     exit 0
   }
@@ -112,23 +116,23 @@ _mode() {
   ' "$@"
 }
 
-#_# deps file...
+#_# deps [file...]
 #_#   Print the list of included file paths
 #_#   Path is printed only the first time encountered
 #_#   Paths are sorted by order of encounter
+#_#   Read from stdin if no files given
 #_#
 do_deps() {
-  test $# -ge 1 || usage 'code [file...]'
-  _mode deps "$@"
+  _mode deps "${@:--}"
 }
 
-#_# code file...
+#_# code [file...]
 #_#   Print the code in files, resolving includes
 #_#   Includes are inserted only the first time encountered
+#_#   Read from stdin if no files given
 #_#
 do_code() {
-  test $# -ge 1 || usage 'code [file...]'
-  _mode code "$@"
+  _mode code "${@:--}"
 }
 
 #_# prog script file...
@@ -201,3 +205,11 @@ do_list() {
   done
 }
 
+do_main() {
+  if test $# -lt 1
+  then
+    usage "$0 code|deps|borrow|list|make|docs|help arg..."
+  fi
+
+  "do_$@"
+}
