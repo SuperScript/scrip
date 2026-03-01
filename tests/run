@@ -624,5 +624,38 @@ _check env SCRIP_PATH="${basedir}/listlib1" ${scrip} list 'zzz_no_match'
 _run 'bin/scrip list searches multiple SCRIP_PATH directories'
 _check_sort env SCRIP_PATH="${basedir}/listlib1:${basedir}/listlib2" ${scrip} list
 
+_run 'do_while executes command for each line'
+_check_prog do_while_basic sh <<'EOF'
+#!/bin/sh
+#include "do_while.sh"
+do_greet() { echo "hello $1"; }
+printf 'alice\nbob\ncharlie\n' | do_while greet
+EOF
+
+_run 'do_while with empty stdin produces no output'
+_check_prog do_while_empty sh <<'EOF'
+#!/bin/sh
+#include "do_while.sh"
+do_greet() { echo "hello $1"; }
+printf '' | do_while greet
+echo "done"
+EOF
+
+_run 'do_while passes entire line as argument'
+_check_prog do_while_line sh <<'EOF'
+#!/bin/sh
+#include "do_while.sh"
+do_show() { echo "got: $1"; }
+printf 'one two three\nfour five\n' | do_while show
+EOF
+
+_run 'do_while chains with do_run'
+_check_prog do_while_chain sh <<'EOF'
+#!/bin/sh
+#include "do_while.sh"
+#include "do_run.sh"
+printf 'hello\nworld\n' | do_while run echo
+EOF
+
 exit 0
 

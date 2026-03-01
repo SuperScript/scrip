@@ -534,3 +534,31 @@ shout "hello from prog test"
 .../tests/basedir/listlib1/gamma.awk
 .../tests/basedir/listlib2/delta.sh
 0
+
+
+==== do_while executes command for each line ====
+
+hello alice
+hello bob
+hello charlie
+0
+
+
+==== do_while with empty stdin produces no output ====
+
+done
+0
+
+
+==== do_while passes entire line as argument ====
+
+got: one two three
+got: four five
+0
+
+
+==== do_while chains with do_run ====
+
+hello
+world
+0
