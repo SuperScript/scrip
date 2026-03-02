@@ -562,3 +562,38 @@ got: four five
 hello
 world
 0
+
+
+==== do_foreach executes command for each line ====
+
+hello alice
+hello bob
+hello charlie
+0
+
+
+==== do_foreach with empty stdin produces no output ====
+
+done
+0
+
+
+==== do_foreach passes entire line as first argument ====
+
+got: one two three
+got: four five
+0
+
+
+==== do_foreach passes trailing arguments after the line ====
+
+alice -> x y
+bob -> x y
+0
+
+
+==== do_foreach chains with do_env ====
+
+1
+2
+0

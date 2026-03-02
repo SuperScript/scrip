@@ -657,5 +657,47 @@ _check_prog do_while_chain sh <<'EOF'
 printf 'hello\nworld\n' | do_while run echo
 EOF
 
+_run 'do_foreach executes command for each line'
+_check_prog do_foreach_basic sh <<'EOF'
+#!/bin/sh
+#include "do_foreach.sh"
+do_greet() { echo "hello $1"; }
+printf 'alice\nbob\ncharlie\n' | do_foreach greet
+EOF
+
+_run 'do_foreach with empty stdin produces no output'
+_check_prog do_foreach_empty sh <<'EOF'
+#!/bin/sh
+#include "do_foreach.sh"
+do_greet() { echo "hello $1"; }
+printf '' | do_foreach greet
+echo "done"
+EOF
+
+_run 'do_foreach passes entire line as first argument'
+_check_prog do_foreach_line sh <<'EOF'
+#!/bin/sh
+#include "do_foreach.sh"
+do_show() { echo "got: $1"; }
+printf 'one two three\nfour five\n' | do_foreach show
+EOF
+
+_run 'do_foreach passes trailing arguments after the line'
+_check_prog do_foreach_args sh <<'EOF'
+#!/bin/sh
+#include "do_foreach.sh"
+do_show() { echo "$1 -> $2 $3"; }
+printf 'alice\nbob\n' | do_foreach show x y
+EOF
+
+_run 'do_foreach chains with do_env'
+_check_prog do_foreach_chain sh <<'EOF'
+#!/bin/sh
+#include "do_foreach.sh"
+#include "do_env.sh"
+#include "do_run.sh"
+printf 'X=1\nX=2\n' | do_foreach env run sh -c 'echo "$X"'
+EOF
+
 exit 0
 
