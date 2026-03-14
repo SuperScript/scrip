@@ -2,6 +2,6 @@
 #_#   Print this helpful message
 #_#
 do_help() {
-  sed -n 's/^#_#/ /p' "$0"
+  sed '/^#_#/!d;s/^#_#/ /;s/^ *$//' "$0"
 }
 
