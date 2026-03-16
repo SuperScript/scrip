@@ -699,5 +699,89 @@ _check_prog do_foreach_chain sh <<'EOF'
 printf 'X=1\nX=2\n' | do_foreach env run sh -c 'echo "$X"'
 EOF
 
+_run 'do_pipeline pipes two commands'
+_check_prog do_pipeline_simple sh <<'EOF'
+#!/bin/sh
+#include "do_pipeline.sh"
+do_pipeline '|' echo 'hello world' '|' sed 's/^h/H/'
+EOF
+
+_run 'do_pipeline chains multiple commands'
+_check_prog do_pipeline_multi sh <<'EOF'
+#!/bin/sh
+#include "do_pipeline.sh"
+do_pipeline :: printf '%s\n' line3 line2 line1 :: sort :: head -n 1
+EOF
+
+_run 'do_pipeline via do_ dispatch'
+_check_prog do_pipeline_dispatch sh <<'EOF'
+#!/bin/sh
+#include "do_.sh"
+#include "do_pipeline.sh"
+#include "do_run.sh"
+do_ pipeline :: echo "dispatched"
+EOF
+
+_run 'do_to_mode writes output with correct mode'
+_check_prog do_to_mode_test sh <<'EOF'
+#!/bin/sh
+#include "do_to_mode.sh"
+#include "do_run.sh"
+do_to_mode "script.sh" "755" run echo "#!/bin/sh"
+ls -l "script.sh" | cut -d' ' -f1
+cat "script.sh"
+EOF
+
+_run 'do_to_mode cleans up on failure'
+_check_prog do_to_mode_fail sh <<'EOF'
+#!/bin/sh
+#include "do_to_mode.sh"
+#include "do_run.sh"
+(do_to_mode "fail_script.sh" "755" run false)
+if [ -f "fail_script.sh" ]; then
+  echo "ERROR: fail_script.sh should not exist"
+else
+  echo "OK: fail_script.sh does not exist"
+fi
+EOF
+
+_run 'do_to_mode calls do_ prefixed function'
+_check_prog do_to_mode_prefix sh <<'EOF'
+#!/bin/sh
+#include "do_to_mode.sh"
+do_echo() {
+  echo "do_echo was called with: $*"
+}
+do_to_mode "prefix_mode.txt" "644" echo "hello world"
+cat "prefix_mode.txt"
+EOF
+
+_run 'do_to_mode creates directories'
+_check_prog do_to_mode_mkdir sh <<'EOF'
+#!/bin/sh
+#include "do_to_mode.sh"
+#include "do_run.sh"
+do_to_mode "do-to-mode-test/sub/dir/out.sh" "755" run echo "#!/bin/sh"
+ls -l "do-to-mode-test/sub/dir/out.sh" | cut -d' ' -f1
+cat "do-to-mode-test/sub/dir/out.sh"
+EOF
+
+_run 'atomic_to creates directories'
+_check_prog atomic_to_mkdir sh <<'EOF'
+#!/bin/sh
+#include "atomic_to.sh"
+atomic_to "atomic-to-test/sub/dir/output.txt" echo "test content"
+cat "atomic-to-test/sub/dir/output.txt"
+EOF
+
+_run 'atomic_to_mode creates directories'
+_check_prog atomic_to_mode_mkdir sh <<'EOF'
+#!/bin/sh
+#include "atomic_to_mode.sh"
+atomic_to_mode "atomic-to-mode-test/sub/dir/script.sh" "755" echo "#!/bin/sh"
+ls -l "atomic-to-mode-test/sub/dir/script.sh" | cut -d' ' -f1
+cat "atomic-to-mode-test/sub/dir/script.sh"
+EOF
+
 exit 0
 

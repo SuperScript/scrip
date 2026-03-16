@@ -10,40 +10,40 @@
 
   help
     Print this helpful message
- 
+
   docs [path ...]
     Print help for each path argument
     Run on $0 if no paths given
- 
+
   deps [file...]
     Print the list of included file paths
     Path is printed only the first time encountered
     Paths are sorted by order of encounter
     Read from stdin if no files given
- 
+
   code [file...]
     Print the code in files, resolving includes
     Includes are inserted only the first time encountered
     Read from stdin if no files given
- 
+
   prog script file...
     Render the files, resolving includes output to script
     Write script with mode 0755
- 
+
   borrow destdir file...
     Copy all included dependencies to destdir
- 
+
   make target...
     Print Makefile rule for building each bin/target from share/scrip/target
     Lists all dependencies and uses atomic write pattern
- 
+
   path
     Copy all included dependencies to destdir
- 
+
   list [regex]
     List files in SCRIP_PATH directories
     Filtered by regex on basename (default: .*)
- 
+
 0
 
 
@@ -596,4 +596,61 @@ bob -> x y
 
 1
 2
+0
+
+
+==== do_pipeline pipes two commands ====
+
+Hello world
+0
+
+
+==== do_pipeline chains multiple commands ====
+
+line1
+0
+
+
+==== do_pipeline via do_ dispatch ====
+
+dispatched
+0
+
+
+==== do_to_mode writes output with correct mode ====
+
+-rwxr-xr-x
+#!/bin/sh
+0
+
+
+==== do_to_mode cleans up on failure ====
+
+OK: fail_script.sh does not exist
+0
+
+
+==== do_to_mode calls do_ prefixed function ====
+
+do_echo was called with: hello world
+0
+
+
+==== do_to_mode creates directories ====
+
+-rwxr-xr-x
+#!/bin/sh
+0
+
+
+==== atomic_to creates directories ====
+
+test content
+0
+
+
+==== atomic_to_mode creates directories ====
+
+-rwxr-xr-x
+#!/bin/sh
 0

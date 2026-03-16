@@ -1,15 +1,9 @@
+#include "atomic_to.sh"
 #_# do_to path cmd [args]
 #_#   Write output from program to path atomically
 #_#
 do_to() {
   local output="$1"
   shift
-  mkdir -p "$(dirname "${output}")" || exit $?
-  local temp="$(mktemp "${output}.XXXXXX")"
-  "do_$@" > "${temp}" && mv "${temp}" "${output}" || {
-    local e=$?
-    rm -f "${temp}"
-    exit $e
-  }
+  atomic_to "${output}" "do_$@"
 }
-
