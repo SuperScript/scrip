@@ -2,15 +2,133 @@
 
 WARNING: This repo is experimental and not yet suited for production use. Interfaces may change without notice.
 
-This repository contains scripts that have proven useful over time, and routines to construct programs from them. The goals is to facilitate easy and self-contained reuse of these routines in scripts, with a common source maintained in one place.
+A library of reusable POSIX shell, make, and awk routines, and a tool to compose them into self-contained programs via `#include`.
 
-Script inclusion is indicated by a line of the form `#include "filename"`. In the initial version this is the only form. In future versions additional comment conventions may be added.
+## Quick Start
+
+    make all          # build bin/ from src/
+    make test         # run test suite
+    make install      # install to /usr/local (set PREFIX= to change)
+
+## The `scrip` command
+
+`scrip` is the core tool. It resolves `#include` directives to produce standalone programs from modular source files.
+
+    scrip code file       # print file with all includes resolved
+    scrip deps file       # list included dependencies in order
+    scrip prog out src    # build executable from source
+    scrip borrow dir file # copy dependencies into a directory
+    scrip list [regex]    # list available library modules
+    scrip docs [path]     # print help documentation from files
+    scrip make target     # emit a Makefile rule for a target
+    scrip path            # print the library search path
+    scrip help            # print help
+
+When no file arguments are given, `code` and `deps` read from stdin. Set `SCRIP_PATH` to a colon-separated list of directories to search for includes; the default is `share/scrip` relative to the scrip binary.
 
 ## Include Resolution
 
-The scrip system provides a program that processes include statements recursively. When it encounters a line containing `#include "filename"`, it replaces that line with the entire contents of the specified file. If the included file itself contains include statements, those are resolved recursively as well.
+A line of the form `#include "filename"` is replaced with the contents of the named file. Includes are resolved recursively. Each file is included only the first time it is encountered.
 
-Each file is included only the first time an include statement for that file is encountered. Subsequent include statements for the same file are ignored.
+`SCRIP_PATH` directories are searched for relative paths. Absolute paths and paths starting with `./` bypass the search.
 
-The `SCRIP_PATH` environment variable holds a colon-separated list of directories to search for relative file paths. Absolute paths or relative paths starting with `./` do not use `SCRIP_PATH`.
+## Library
 
+Library modules live in `share/scrip/`. The file extension identifies the language: `.sh` for shell, `.mk` for make, `.awk` for awk.
+
+### Error handling
+
+| Function | Behavior |
+|----------|----------|
+| `shout` | Print message to stderr |
+| `barf` | Print fatal message to stderr, exit 111 |
+| `usage` | Print usage message to stderr, exit 100 |
+| `safe` | Run command, barf on failure |
+| `catch` | Run command, exit 111 if stderr matches a pattern |
+
+### Pipelines
+
+| Function | Behavior |
+|----------|----------|
+| `pipewith cmd sep args...` | Build and eval a pipeline, applying `cmd` to each segment |
+| `pipeline sep prog...` | Pipeline of external commands (via `do_run`) |
+| `pipe sep func...` | Pipeline of `do_`-prefixed shell functions (via `do_`) |
+
+### Dispatchers
+
+| Function | Behavior |
+|----------|----------|
+| `do_ prog` | Call `do_prog` (shell function dispatch) |
+| `do_run prog` | Call `prog` (external command dispatch) |
+| `do_xrun prog` | Run with explicit argument passing |
+| `do_env VAR=val... cmd` | Export variables, then dispatch |
+| `do_set -opt... cmd` | Apply shell options, then dispatch |
+
+### File output
+
+| Function | Behavior |
+|----------|----------|
+| `atomic_to path cmd` | Write command output to path atomically |
+| `atomic_to_mode path mode cmd` | Atomic write with chmod |
+| `do_to path cmd` | Atomic write via `do_` dispatch |
+| `do_to_mode path mode cmd` | Atomic write with mode via `do_` dispatch |
+
+### Iteration
+
+| Function | Behavior |
+|----------|----------|
+| `do_while cmd` | For each stdin line, call `do_cmd line` |
+| `do_foreach cmd args` | For each stdin line, call `do_cmd line args` |
+
+### Utilities
+
+| Function | Behavior |
+|----------|----------|
+| `have_args count args...` | Return 0 if enough arguments provided |
+| `do_help` | Print `#_#` help text from a file |
+| `ditto` | Print arguments to stdout |
+| `ditt` | Print arguments to stdout without newline |
+
+### Make modules
+
+| Module | Purpose |
+|--------|---------|
+| `help.mk` | Standard help target from `#_#` comments |
+| `test.mk` | Test runner with diff against expected output |
+| `needvar.mk` | Variable validation |
+| `template.mk` | Minimal Makefile template |
+| `tex-pdf.mk` | LaTeX to PDF workflow |
+
+## Writing a program
+
+Create a source file in `src/` with `#include` directives:
+
+```sh
+#!/bin/sh
+#include "usage.sh"
+#include "do_help.sh"
+#include "pipe.sh"
+
+do_greet() { printf 'hello %s\n' "$1"; }
+do_shout() { tr '[a-z]' '[A-Z]'; }
+
+test $# -lt 1 && usage "$0 command [args...]"
+"do_$@"
+```
+
+Build it with `scrip prog bin/myprog src/myprog` or just `make all`.
+
+## Help documentation
+
+Lines beginning with `#_#` are extracted as help text by `do_help` and `scrip docs`:
+
+```sh
+#_# greet name
+#_#   Say hello to name
+#_#
+do_greet() { printf 'hello %s\n' "$1"; }
+```
+
+## License
+
+BSD 3-Clause. See LICENSE.
