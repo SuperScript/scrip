@@ -617,6 +617,36 @@ dispatched
 0
 
 
+==== pipe pipes two do_ functions ====
+
+Hello world
+0
+
+
+==== pipe chains multiple do_ functions ====
+
+line1
+0
+
+
+==== do_pipe pipes two do_ functions ====
+
+Hello world
+0
+
+
+==== do_pipe chains multiple do_ functions ====
+
+line1
+0
+
+
+==== do_pipe via do_ dispatch ====
+
+dispatched
+0
+
+
 ==== do_to_mode writes output with correct mode ====
 
 -rwxr-xr-x

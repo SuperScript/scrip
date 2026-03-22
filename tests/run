@@ -722,6 +722,53 @@ _check_prog do_pipeline_dispatch sh <<'EOF'
 do_ pipeline :: echo "dispatched"
 EOF
 
+_run 'pipe pipes two do_ functions'
+_check_prog pipe_simple sh <<'EOF'
+#!/bin/sh
+#include "pipe.sh"
+do_echo() { printf '%s\n' "$*"; }
+do_sed() { sed "$@"; }
+pipe :: echo "hello world" :: sed 's/^h/H/'
+EOF
+
+_run 'pipe chains multiple do_ functions'
+_check_prog pipe_multi sh <<'EOF'
+#!/bin/sh
+#include "pipe.sh"
+do_lines() { printf '%s\n' "$@"; }
+do_sort() { sort; }
+do_head() { head "$@"; }
+pipe :: lines line3 line2 line1 :: sort :: head -n 1
+EOF
+
+_run 'do_pipe pipes two do_ functions'
+_check_prog do_pipe_simple sh <<'EOF'
+#!/bin/sh
+#include "do_pipe.sh"
+do_echo() { printf '%s\n' "$*"; }
+do_sed() { sed "$@"; }
+do_pipe :: echo "hello world" :: sed 's/^h/H/'
+EOF
+
+_run 'do_pipe chains multiple do_ functions'
+_check_prog do_pipe_multi sh <<'EOF'
+#!/bin/sh
+#include "do_pipe.sh"
+do_lines() { printf '%s\n' "$@"; }
+do_sort() { sort; }
+do_head() { head "$@"; }
+do_pipe :: lines line3 line2 line1 :: sort :: head -n 1
+EOF
+
+_run 'do_pipe via do_ dispatch'
+_check_prog do_pipe_dispatch sh <<'EOF'
+#!/bin/sh
+#include "do_.sh"
+#include "do_pipe.sh"
+do_echo() { printf '%s\n' "$*"; }
+do_ pipe :: echo "dispatched"
+EOF
+
 _run 'do_to_mode writes output with correct mode'
 _check_prog do_to_mode_test sh <<'EOF'
 #!/bin/sh
