@@ -186,7 +186,7 @@ do_make() {
 }
 
 #_# path
-#_#   Copy all included dependencies to destdir
+#_#   Print the scrip path value
 #_#
 do_path() {
   printf '%s\n' "${SCRIP_PATH:-$(dirname $(dirname "$0"))/share/scrip}"
