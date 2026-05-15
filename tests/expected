@@ -38,7 +38,7 @@
     Lists all dependencies and uses atomic write pattern
 
   path
-    Copy all included dependencies to destdir
+    Print the scrip path value
 
   list [regex]
     List files in SCRIP_PATH directories
@@ -332,7 +332,7 @@ hereur
     Lists all dependencies and uses atomic write pattern
  
   path
-    Copy all included dependencies to destdir
+    Print the scrip path value
  
   list [regex]
     List files in SCRIP_PATH directories
