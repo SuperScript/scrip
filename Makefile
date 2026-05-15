@@ -1,5 +1,4 @@
 PREFIX = /usr/local
-BINARIES = scrip pipeline pipewith asciinema-script
 
 needvars = target
 
@@ -87,13 +86,13 @@ test: all
 install: all
 	@install -d "$(PREFIX)/bin"
 	@install -d "$(PREFIX)/share/scrip"
-	@for bin in $(BINARIES); do install -m 755 "bin/$${bin}" "$(PREFIX)/bin/"; done
+	@for bin in $$(ls bin/); do install -m 755 "bin/$${bin}" "$(PREFIX)/bin/"; done
 	@install -m 644 share/scrip/* "$(PREFIX)/share/scrip/"
 
 #_# uninstall
 #_#   Remove installed files from PREFIX
 #_#
 uninstall:
-	@for bin in $(BINARIES); do rm -f "$(PREFIX)/bin/$${bin}"; done
+	@for bin in  bin/); do rm -f "$(PREFIX)/bin/$${bin}"; done
 	@rm -rf "$(PREFIX)/share/scrip"
 
