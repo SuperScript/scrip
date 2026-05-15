@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#include "usage.sh"
+#include "tmux_filter.sh"
+
+test $# -gt 0 || usage "$0 prog [args]"
+tmux_filter "$@"
+
