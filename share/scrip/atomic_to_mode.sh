@@ -6,7 +6,8 @@ atomic_to_mode() {
   local mode="$2"
   shift 2
   mkdir -p "$(dirname "${output}")" || exit $?
-  local temp="$(mktemp "${output}.XXXXXX")"
+  local temp
+  temp="$(mktemp "${output}.XXXXXX")" || exit $?
   "$@" > "${temp}" && chmod "${mode}" "${temp}" && mv "${temp}" "${output}" || {
     local e=$?
     rm -f "${temp}"
