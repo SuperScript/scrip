@@ -2,6 +2,7 @@
 
 home="$(pwd)"
 _sort="env LC_ALL=POSIX sort"
+_make="${MAKE:-make}"
 
 PATH="${home}/bin:$PATH"
 export PATH
@@ -52,6 +53,35 @@ _check_prog() {
   env SCRIP_PATH="${libdir}" ${scrip} code "${basedir}/${prog}.tmp" > "${basedir}/${prog}"
   rm -f "${basedir}/${prog}.tmp"
   _check "$@" "${basedir}/${prog}"
+}
+
+# _modes dir
+#   Print the mode and path of every file under dir, sorted
+_modes() {
+  ( cd "$1" && find . -type f | ${_sort} | while read -r f
+    do
+      printf '%s %s\n' "$(ls -l "${f}" | cut -d' ' -f1)" "${f}"
+    done )
+}
+
+# _make_install pkg prefix
+#   Install the package to prefix and list what landed, with modes
+_make_install() {
+  local pkg="$1"
+  local prefix="$2"
+  ( cd "${pkg}" && ${_make} install PREFIX="${prefix}" ) || return
+  _modes "${prefix}"
+}
+
+# _make_uninstall pkg prefix
+#   Uninstall the package from prefix and list the files and
+#   directories that survive
+_make_uninstall() {
+  local pkg="$1"
+  local prefix="$2"
+  ( cd "${pkg}" && ${_make} uninstall PREFIX="${prefix}" ) || return
+  ( cd "${prefix}" && find . -type f | ${_sort} )
+  ( cd "${prefix}" && find . -type d | ${_sort} )
 }
 
 ####
@@ -829,6 +859,24 @@ atomic_to_mode "atomic-to-mode-test/sub/dir/script.sh" "755" echo "#!/bin/sh"
 ls -l "atomic-to-mode-test/sub/dir/script.sh" | cut -d' ' -f1
 cat "atomic-to-mode-test/sub/dir/script.sh"
 EOF
+
+fakepkg="${basedir}/fakepkg"
+fakeprefix="${basedir}/fakeprefix"
+
+mkdir -p "${fakepkg}/bin" "${fakepkg}/share/fake/sub"
+cp "${libdir}/install.mk" "${fakepkg}/Makefile"
+echo 'one' > "${fakepkg}/bin/one"
+echo 'two' > "${fakepkg}/bin/two"
+echo 'lib' > "${fakepkg}/share/fake/lib.sh"
+echo 'deep' > "${fakepkg}/share/fake/sub/deep.sh"
+
+_run 'install.mk installs a package tree under PREFIX'
+_check _make_install "${fakepkg}" "${fakeprefix}"
+
+_run 'install.mk uninstall removes installed files only'
+echo 'stranger' > "${fakeprefix}/bin/stranger"
+echo 'stranger' > "${fakeprefix}/share/fake/stranger"
+_check _make_uninstall "${fakepkg}" "${fakeprefix}"
 
 exit 0
 

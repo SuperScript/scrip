@@ -684,3 +684,24 @@ test content
 -rwxr-xr-x
 #!/bin/sh
 0
+
+
+==== install.mk installs a package tree under PREFIX ====
+
+-rwxr-xr-x ./bin/one
+-rwxr-xr-x ./bin/two
+-rw-r--r-- ./share/fake/lib.sh
+-rw-r--r-- ./share/fake/sub/deep.sh
+0
+
+
+==== install.mk uninstall removes installed files only ====
+
+./bin/stranger
+./share/fake/stranger
+.
+./bin
+./share
+./share/fake
+./share/fake/sub
+0

@@ -4,11 +4,36 @@ WARNING: This repo is experimental and not yet suited for production use. Interf
 
 A library of reusable POSIX shell, make, and awk routines, and a tool to compose them into self-contained programs via `#include`.
 
-## Quick Start
+## Why
+
+Shell scripts duplicate the same code over and over — error handling, pipelines,
+atomic writes. scrip keeps one copy of each routine in a library and gives you
+the tools to recombine them into programs.
+
+What you gain:
+
+- You do not re-implement the basics in every new script.
+- A fix to a routine reaches every program that uses it on the next build.
+- The built program is one self-contained file. Copy it to a machine with
+  nothing installed and it runs.
+
+It is for anyone writing shell tools they need to ship.
+
+## Installation
+
+Clone the repo and build. Nothing is required beyond a POSIX sh, make, and awk.
 
     make all          # build bin/ from src/
     make test         # run test suite
     make install      # install to /usr/local (set PREFIX= to change)
+
+## Day to Day
+
+Write a source file in `src/` with `#include` lines for the routines you want.
+Run `make all` to build it into `bin/`. Ship the built file — it stands alone.
+
+For a project outside scrip, use `scrip borrow` to copy the routines you need
+into it.
 
 ## The `scrip` command
 
@@ -94,6 +119,7 @@ Library modules live in `share/scrip/`. The file extension identifies the langua
 | Module | Purpose |
 |--------|---------|
 | `help.mk` | Standard help target from `#_#` comments |
+| `install.mk` | Standard `install` and `uninstall` targets for `bin` and `share` |
 | `test.mk` | Test runner with diff against expected output |
 | `needvar.mk` | Variable validation |
 | `template.mk` | Minimal Makefile template |

@@ -83,16 +83,17 @@ test: all
 #_# install
 #_#   Install executables and libraries to PREFIX (default: /usr/local)
 #_#
+.PHONY: install
 install: all
 	@install -d "$(PREFIX)/bin"
-	@install -d "$(PREFIX)/share/scrip"
-	@for bin in $$(ls bin/); do install -m 755 "bin/$${bin}" "$(PREFIX)/bin/"; done
-	@install -m 644 share/scrip/* "$(PREFIX)/share/scrip/"
+	@install -m 755 bin/* "$(PREFIX)/bin/"
+	@find share -type d | while read -r d; do install -d "$(PREFIX)/$$d"; done
+	@find share -type f | while read -r f; do install -m 644 "$$f" "$(PREFIX)/$$f"; done
 
 #_# uninstall
-#_#   Remove installed files from PREFIX
+#_#   Remove installed files from PREFIX, leaving directories in place
 #_#
+.PHONY: uninstall
 uninstall:
-	@for bin in  bin/); do rm -f "$(PREFIX)/bin/$${bin}"; done
-	@rm -rf "$(PREFIX)/share/scrip"
+	@find bin share -type f | while read -r f; do rm -f "$(PREFIX)/$$f"; done
 
