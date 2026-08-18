@@ -357,6 +357,7 @@ test content
 
 ==== do_to cleans up on failure ====
 
+.../tests/basedir/do_to_fail: fatal: cannot atomic_to fail_output.txt do_run false
 OK: fail_output.txt does not exist
 0
 
@@ -656,6 +657,7 @@ dispatched
 
 ==== do_to_mode cleans up on failure ====
 
+.../tests/basedir/do_to_mode_fail: fatal: cannot atomic_to_mode fail_script.sh 755 do_run false
 OK: fail_script.sh does not exist
 0
 

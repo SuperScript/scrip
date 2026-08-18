@@ -3,13 +3,13 @@
 atomic_to() {
   local output="$1"
   shift
-  mkdir -p "$(dirname "${output}")" || exit $?
+  mkdir -p "$(dirname "${output}")" || return $?
   local temp
-  temp="$(mktemp "${output}.XXXXXX")" || exit $?
+  temp="$(mktemp "${output}.XXXXXX")" || return $?
   "$@" > "${temp}" && mv "${temp}" "${output}" || {
     local e=$?
     rm -f "${temp}"
-    exit $e
+    return $e
   }
 }
 

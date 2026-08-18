@@ -1,4 +1,5 @@
 #include "usage.sh"
+#include "safe.sh"
 #include "do_help.sh"
 #include "atomic_to_mode.sh"
 
@@ -143,7 +144,7 @@ do_prog() {
   test $# -ge 2 || usage 'prog script [file...]'
   local script="$1"
   shift
-  atomic_to_mode "${script}" 0755 _mode code "$@"
+  safe atomic_to_mode "${script}" 0755 _mode code "$@"
 }
 
 #_# borrow destdir file...

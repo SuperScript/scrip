@@ -208,7 +208,7 @@ _run 'atomic_to cleans up on failure'
 _check_prog atomic_to_fail sh <<'EOF'
 #!/bin/sh
 #include "atomic_to.sh"
-(atomic_to "fail_output.txt" false)
+atomic_to "fail_output.txt" false
 if [ -f "fail_output.txt" ]; then
   echo "ERROR: fail_output.txt should not exist"
 else
@@ -229,7 +229,7 @@ _run 'atomic_to_mode cleans up on failure'
 _check_prog atomic_to_mode_fail sh <<'EOF'
 #!/bin/sh
 #include "atomic_to_mode.sh"
-(atomic_to_mode "fail_script.sh" "755" false)
+atomic_to_mode "fail_script.sh" "755" false
 if [ -f "fail_script.sh" ]; then
   echo "ERROR: fail_script.sh should not exist"
 else
