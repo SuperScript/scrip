@@ -1,4 +1,4 @@
-pipewith_cmd() {
+sequence_cmd() {
   local sep="$2"
   shift 2
 
@@ -9,7 +9,7 @@ pipewith_cmd() {
   do
     if test "$a" = "${sep}"
     then
-      cmd="${cmd} |"
+      cmd="${cmd};"
       p='"$1"'
     else
       cmd="${cmd} ${p} \"\${$i}\""
@@ -21,8 +21,7 @@ pipewith_cmd() {
   printf '%s\n' "${cmd}"
 }
 
-# pipewith cmd sep args1 [sep args2 ...]
-pipewith() {
-  eval "$(pipewith_cmd "$@")"
+# sequence_with cmd sep args1 [sep args2 ...]
+sequence_with() {
+  eval "$(sequence_cmd "$@")"
 }
-

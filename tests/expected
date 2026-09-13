@@ -179,6 +179,321 @@ OK: fail_script.sh does not exist
 0
 
 
+==== append_to appends output on success ====
+
+first
+second
+0
+
+
+==== append_to creates directories ====
+
+test content
+0
+
+
+==== append_to_mode writes output with correct mode ====
+
+-rwxr-xr-x
+#!/bin/sh
+0
+
+
+==== append_to_mode creates directories ====
+
+-rwxr-xr-x
+#!/bin/sh
+0
+
+
+==== do_append_to appends output on success ====
+
+first
+second
+0
+
+
+==== do_append_to calls do_ prefixed function ====
+
+first
+do_echo was called with: hello world
+0
+
+
+==== do_append_to_mode writes output with correct mode ====
+
+-rwxr-xr-x
+#!/bin/sh
+0
+
+
+==== do_append_to_mode calls do_ prefixed function ====
+
+-rw-r--r--
+do_echo was called with: hello world
+0
+
+
+==== from reads input from path ====
+
+hello
+0
+
+
+==== do_from reads input from path ====
+
+hello
+0
+
+
+==== do_from calls do_ prefixed function ====
+
+hello
+0
+
+
+==== err_to writes stderr to path ====
+
+out
+stdout-was-printed
+err
+0
+
+
+==== err_to creates directories ====
+
+err
+0
+
+
+==== err_to_mode writes stderr with correct mode ====
+
+-rwxr-xr-x
+err
+0
+
+
+==== do_err_to writes stderr to path ====
+
+out
+stdout-was-printed
+err
+0
+
+
+==== do_err_to calls do_ prefixed function ====
+
+hello world
+0
+
+
+==== do_err_to_mode writes stderr with correct mode ====
+
+-rwxr-xr-x
+err
+0
+
+
+==== err_append_to appends stderr to path ====
+
+first
+second
+0
+
+
+==== do_err_append_to appends stderr to path ====
+
+first
+second
+0
+
+
+==== fd_to writes fd to path ====
+
+out
+stdout-was-printed
+err
+0
+
+
+==== fd_to creates directories ====
+
+test content
+0
+
+
+==== fd_to rejects non-digit fd ====
+
+status:1
+0
+
+
+==== do_fd_to writes fd to path ====
+
+out
+stdout-was-printed
+err
+0
+
+
+==== fd_from reads fd from path ====
+
+hello
+0
+
+
+==== do_fd_from reads fd from path ====
+
+hello
+0
+
+
+==== fd_dup_to duplicates fd onto fd ====
+
+out
+err
+0
+
+
+==== fd_dup_to closes fd with - ====
+
+still-here
+0
+
+
+==== do_fd_dup_to duplicates fd onto fd ====
+
+out
+err
+0
+
+
+==== fd_dup_from duplicates fd onto fd ====
+
+hello
+0
+
+
+==== do_fd_dup_from duplicates fd onto fd ====
+
+hello
+0
+
+
+==== background runs program in the background ====
+
+bg
+0
+
+
+==== do_background runs do_ function in the background ====
+
+hello
+0
+
+
+==== subshell isolates directory change ====
+
+sub
+0
+
+
+==== do_subshell isolates directory change ====
+
+do_sub
+0
+
+
+==== group keeps directory change ====
+
+grouped
+0
+
+
+==== do_group keeps directory change ====
+
+do_grouped
+0
+
+
+==== and_with runs second command if first succeeds ====
+
+ok
+0
+
+
+==== and_with skips second command if first fails ====
+
+no
+1
+
+
+==== do_and runs second command if first succeeds ====
+
+ok
+0
+
+
+==== do_and via do_ dispatch ====
+
+dispatched
+0
+
+
+==== or_with runs second command if first fails ====
+
+no
+ok
+0
+
+
+==== or_with skips second command if first succeeds ====
+
+yes
+0
+
+
+==== do_or runs second command if first fails ====
+
+no
+ok
+0
+
+
+==== do_or via do_ dispatch ====
+
+no
+dispatched
+0
+
+
+==== sequence_with runs both commands ====
+
+one
+two
+0
+
+
+==== sequence_with runs second command after first fails ====
+
+no
+ok
+0
+
+
+==== do_sequence runs both commands ====
+
+one
+two
+0
+
+
+==== do_sequence via do_ dispatch ====
+
+dispatched
+0
+
+
 ==== pipewith with do_ works ====
 
 thereugo
@@ -343,7 +658,7 @@ hereur
 
 ==== bin/scrip make emits Makefile rule ====
 
-bin/pipeline: bin/scrip src/pipeline .../share/scrip/pipeline.sh .../share/scrip/pipewith.sh .../share/scrip/do_run.sh .../share/scrip/usage.sh .../share/scrip/shout.sh
+bin/pipeline: bin/scrip src/pipeline .../share/scrip/pipeline.sh .../share/scrip/pipe_with.sh .../share/scrip/do_run.sh .../share/scrip/usage.sh .../share/scrip/shout.sh
 	bin/scrip prog bin/pipeline src/pipeline
 
 0
@@ -618,13 +933,13 @@ dispatched
 0
 
 
-==== pipe pipes two do_ functions ====
+==== pipe_with do_ pipes two do_ functions ====
 
 Hello world
 0
 
 
-==== pipe chains multiple do_ functions ====
+==== pipe_with do_ chains multiple do_ functions ====
 
 line1
 0

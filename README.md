@@ -75,9 +75,26 @@ Library modules live in `share/scrip/`. The file extension identifies the langua
 
 | Function | Behavior |
 |----------|----------|
-| `pipewith cmd sep args...` | Build and eval a pipeline, applying `cmd` to each segment |
+| `pipe_with cmd sep args...` | Build and eval a pipeline, applying `cmd` to each segment |
 | `pipeline sep prog...` | Pipeline of external commands (via `do_run`) |
 | `pipe sep func...` | Pipeline of `do_`-prefixed shell functions (via `do_`) |
+
+### Command lists
+
+| Function | Behavior |
+|----------|----------|
+| `and_with cmd sep args...` | Build and eval an and-list, applying `cmd` to each segment |
+| `and sep func...` | And-list of `do_`-prefixed shell functions (via `do_`) |
+| `or_with cmd sep args...` | Build and eval an or-list, applying `cmd` to each segment |
+| `or sep func...` | Or-list of `do_`-prefixed shell functions (via `do_`) |
+| `sequence_with cmd sep args...` | Build and eval a sequence, applying `cmd` to each segment |
+| `sequence sep func...` | Sequence of `do_`-prefixed shell functions (via `do_`) |
+| `background prog` | Run command in the background |
+| `do_background cmd` | Background via `do_` dispatch |
+| `subshell prog` | Run command in a subshell |
+| `do_subshell cmd` | Subshell via `do_` dispatch |
+| `group prog [args...]` | Run remaining arguments as a command group |
+| `do_group cmd` | Command group via `do_` dispatch |
 
 ### Dispatchers
 
@@ -97,6 +114,31 @@ Library modules live in `share/scrip/`. The file extension identifies the langua
 | `atomic_to_mode path mode cmd` | Atomic write with chmod |
 | `do_to path cmd` | Atomic write via `do_` dispatch |
 | `do_to_mode path mode cmd` | Atomic write with mode via `do_` dispatch |
+
+### Redirection
+
+| Function | Behavior |
+|----------|----------|
+| `append_to path prog` | Append command output to path |
+| `append_to_mode path mode prog` | Append, then chmod |
+| `do_append_to path cmd` | Append via `do_` dispatch |
+| `do_append_to_mode path mode cmd` | Append with mode via `do_` dispatch |
+| `from path prog` | Read command stdin from path |
+| `do_from path cmd` | Read stdin from path via `do_` dispatch |
+| `err_to path prog` | Write command stderr to path |
+| `err_to_mode path mode prog` | Write stderr, then chmod |
+| `do_err_to path cmd` | Write stderr via `do_` dispatch |
+| `do_err_to_mode path mode cmd` | Write stderr with mode via `do_` dispatch |
+| `err_append_to path prog` | Append command stderr to path |
+| `do_err_append_to path cmd` | Append stderr via `do_` dispatch |
+| `fd_to n path prog` | Write fd n to path (`n` must be digits) |
+| `do_fd_to n path cmd` | Write fd n via `do_` dispatch |
+| `fd_from n path prog` | Read fd n from path |
+| `do_fd_from n path cmd` | Read fd n via `do_` dispatch |
+| `fd_dup_to n m prog` | Duplicate fd m onto n (`m` may be `-` to close n) |
+| `do_fd_dup_to n m cmd` | Duplicate onto n via `do_` dispatch |
+| `fd_dup_from n m prog` | Duplicate fd m onto n for input (`m` may be `-`) |
+| `do_fd_dup_from n m cmd` | Duplicate from m via `do_` dispatch |
 
 ### Iteration
 
@@ -133,7 +175,7 @@ Create a source file in `src/` with `#include` directives:
 #!/bin/sh
 #include "usage.sh"
 #include "do_help.sh"
-#include "pipe.sh"
+#include "do_pipe.sh"
 
 do_greet() { printf 'hello %s\n' "$1"; }
 do_shout() { tr '[a-z]' '[A-Z]'; }

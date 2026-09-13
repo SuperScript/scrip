@@ -237,76 +237,518 @@ else
 fi
 EOF
 
+_run 'append_to appends output on success'
+_check_prog append_to_test sh <<'EOF'
+#!/bin/sh
+#include "append_to.sh"
+echo "first" > "output.txt"
+append_to "output.txt" echo "second"
+cat "output.txt"
+EOF
+
+_run 'append_to creates directories'
+_check_prog append_to_mkdir sh <<'EOF'
+#!/bin/sh
+#include "append_to.sh"
+append_to "append-to-test/sub/dir/output.txt" echo "test content"
+cat "append-to-test/sub/dir/output.txt"
+EOF
+
+_run 'append_to_mode writes output with correct mode'
+_check_prog append_to_mode_test sh <<'EOF'
+#!/bin/sh
+#include "append_to_mode.sh"
+append_to_mode "append_script.sh" "755" echo "#!/bin/sh"
+ls -l "append_script.sh" | cut -d' ' -f1
+cat "append_script.sh"
+EOF
+
+_run 'append_to_mode creates directories'
+_check_prog append_to_mode_mkdir sh <<'EOF'
+#!/bin/sh
+#include "append_to_mode.sh"
+append_to_mode "append-to-mode-test/sub/dir/script.sh" "755" echo "#!/bin/sh"
+ls -l "append-to-mode-test/sub/dir/script.sh" | cut -d' ' -f1
+cat "append-to-mode-test/sub/dir/script.sh"
+EOF
+
+_run 'do_append_to appends output on success'
+_check_prog do_append_to_test sh <<'EOF'
+#!/bin/sh
+#include "do_append_to.sh"
+#include "do_run.sh"
+echo "first" > "output.txt"
+do_append_to "output.txt" run echo "second"
+cat "output.txt"
+EOF
+
+_run 'do_append_to calls do_ prefixed function'
+_check_prog do_append_to_prefix sh <<'EOF'
+#!/bin/sh
+#include "do_append_to.sh"
+do_echo() {
+  echo "do_echo was called with: $*"
+}
+echo "first" > "prefix_test.txt"
+do_append_to "prefix_test.txt" echo "hello world"
+cat "prefix_test.txt"
+EOF
+
+_run 'do_append_to_mode writes output with correct mode'
+_check_prog do_append_to_mode_test sh <<'EOF'
+#!/bin/sh
+#include "do_append_to_mode.sh"
+#include "do_run.sh"
+do_append_to_mode "do_append_script.sh" "755" run echo "#!/bin/sh"
+ls -l "do_append_script.sh" | cut -d' ' -f1
+cat "do_append_script.sh"
+EOF
+
+_run 'do_append_to_mode calls do_ prefixed function'
+_check_prog do_append_to_mode_prefix sh <<'EOF'
+#!/bin/sh
+#include "do_append_to_mode.sh"
+do_echo() {
+  echo "do_echo was called with: $*"
+}
+do_append_to_mode "prefix_mode.txt" "644" echo "hello world"
+ls -l "prefix_mode.txt" | cut -d' ' -f1
+cat "prefix_mode.txt"
+EOF
+
+_run 'from reads input from path'
+_check_prog from_test sh <<'EOF'
+#!/bin/sh
+#include "from.sh"
+echo "hello" > "input.txt"
+from "input.txt" cat
+EOF
+
+_run 'do_from reads input from path'
+_check_prog do_from_test sh <<'EOF'
+#!/bin/sh
+#include "do_from.sh"
+#include "do_run.sh"
+echo "hello" > "input.txt"
+do_from "input.txt" run cat
+EOF
+
+_run 'do_from calls do_ prefixed function'
+_check_prog do_from_prefix sh <<'EOF'
+#!/bin/sh
+#include "do_from.sh"
+do_cat() { cat; }
+echo "hello" > "input.txt"
+do_from "input.txt" cat
+EOF
+
+_run 'err_to writes stderr to path'
+_check_prog err_to_test sh <<'EOF'
+#!/bin/sh
+#include "err_to.sh"
+err_to "err.txt" sh -c 'echo out; echo err >&2'
+echo "stdout-was-printed"
+cat "err.txt"
+EOF
+
+_run 'err_to creates directories'
+_check_prog err_to_mkdir sh <<'EOF'
+#!/bin/sh
+#include "err_to.sh"
+err_to "err-to-test/sub/err.txt" sh -c 'echo err >&2'
+cat "err-to-test/sub/err.txt"
+EOF
+
+_run 'err_to_mode writes stderr with correct mode'
+_check_prog err_to_mode_test sh <<'EOF'
+#!/bin/sh
+#include "err_to_mode.sh"
+err_to_mode "err.txt" "755" sh -c 'echo err >&2'
+ls -l "err.txt" | cut -d' ' -f1
+cat "err.txt"
+EOF
+
+_run 'do_err_to writes stderr to path'
+_check_prog do_err_to_test sh <<'EOF'
+#!/bin/sh
+#include "do_err_to.sh"
+#include "do_run.sh"
+do_err_to "err.txt" run sh -c 'echo out; echo err >&2'
+echo "stdout-was-printed"
+cat "err.txt"
+EOF
+
+_run 'do_err_to calls do_ prefixed function'
+_check_prog do_err_to_prefix sh <<'EOF'
+#!/bin/sh
+#include "do_err_to.sh"
+do_warn() { echo "$*" >&2; }
+do_err_to "err.txt" warn "hello world"
+cat "err.txt"
+EOF
+
+_run 'do_err_to_mode writes stderr with correct mode'
+_check_prog do_err_to_mode_test sh <<'EOF'
+#!/bin/sh
+#include "do_err_to_mode.sh"
+#include "do_run.sh"
+do_err_to_mode "err.txt" "755" run sh -c 'echo err >&2'
+ls -l "err.txt" | cut -d' ' -f1
+cat "err.txt"
+EOF
+
+_run 'err_append_to appends stderr to path'
+_check_prog err_append_to_test sh <<'EOF'
+#!/bin/sh
+#include "err_append_to.sh"
+sh -c 'echo first >&2' 2> "err.txt"
+err_append_to "err.txt" sh -c 'echo second >&2'
+cat "err.txt"
+EOF
+
+_run 'do_err_append_to appends stderr to path'
+_check_prog do_err_append_to_test sh <<'EOF'
+#!/bin/sh
+#include "do_err_append_to.sh"
+#include "do_run.sh"
+sh -c 'echo first >&2' 2> "err.txt"
+do_err_append_to "err.txt" run sh -c 'echo second >&2'
+cat "err.txt"
+EOF
+
+_run 'fd_to writes fd to path'
+_check_prog fd_to_test sh <<'EOF'
+#!/bin/sh
+#include "fd_to.sh"
+fd_to 2 "err.txt" sh -c 'echo out; echo err >&2'
+echo "stdout-was-printed"
+cat "err.txt"
+EOF
+
+_run 'fd_to creates directories'
+_check_prog fd_to_mkdir sh <<'EOF'
+#!/bin/sh
+#include "fd_to.sh"
+fd_to 1 "fd-to-test/sub/out.txt" echo "test content"
+cat "fd-to-test/sub/out.txt"
+EOF
+
+_run 'fd_to rejects non-digit fd'
+_check_prog fd_to_bad sh <<'EOF'
+#!/bin/sh
+#include "fd_to.sh"
+fd_to x "out.txt" echo "hi"
+echo "status:$?"
+EOF
+
+_run 'do_fd_to writes fd to path'
+_check_prog do_fd_to_test sh <<'EOF'
+#!/bin/sh
+#include "do_fd_to.sh"
+#include "do_run.sh"
+do_fd_to 2 "err.txt" run sh -c 'echo out; echo err >&2'
+echo "stdout-was-printed"
+cat "err.txt"
+EOF
+
+_run 'fd_from reads fd from path'
+_check_prog fd_from_test sh <<'EOF'
+#!/bin/sh
+#include "fd_from.sh"
+echo "hello" > "input.txt"
+fd_from 0 "input.txt" cat
+EOF
+
+_run 'do_fd_from reads fd from path'
+_check_prog do_fd_from_test sh <<'EOF'
+#!/bin/sh
+#include "do_fd_from.sh"
+#include "do_run.sh"
+echo "hello" > "input.txt"
+do_fd_from 0 "input.txt" run cat
+EOF
+
+_run 'fd_dup_to duplicates fd onto fd'
+_check_prog fd_dup_to_test sh <<'EOF'
+#!/bin/sh
+#include "fd_dup_to.sh"
+fd_dup_to 2 1 sh -c 'echo out; echo err >&2'
+EOF
+
+_run 'fd_dup_to closes fd with -'
+_check_prog fd_dup_to_close sh <<'EOF'
+#!/bin/sh
+#include "fd_dup_to.sh"
+fd_dup_to 1 - true
+echo "still-here"
+EOF
+
+_run 'do_fd_dup_to duplicates fd onto fd'
+_check_prog do_fd_dup_to_test sh <<'EOF'
+#!/bin/sh
+#include "do_fd_dup_to.sh"
+#include "do_run.sh"
+do_fd_dup_to 2 1 run sh -c 'echo out; echo err >&2'
+EOF
+
+_run 'fd_dup_from duplicates fd onto fd'
+_check_prog fd_dup_from_test sh <<'EOF'
+#!/bin/sh
+#include "fd_dup_from.sh"
+echo "hello" | fd_dup_from 0 0 cat
+EOF
+
+_run 'do_fd_dup_from duplicates fd onto fd'
+_check_prog do_fd_dup_from_test sh <<'EOF'
+#!/bin/sh
+#include "do_fd_dup_from.sh"
+#include "do_run.sh"
+echo "hello" | do_fd_dup_from 0 0 run cat
+EOF
+
+_run 'background runs program in the background'
+_check_prog background_test sh <<'EOF'
+#!/bin/sh
+#include "background.sh"
+background sh -c 'echo bg > bg.txt'
+wait
+cat bg.txt
+EOF
+
+_run 'do_background runs do_ function in the background'
+_check_prog do_background_test sh <<'EOF'
+#!/bin/sh
+#include "do_background.sh"
+do_echo() { echo "$*" > bg.txt; }
+do_background echo hello
+wait
+cat bg.txt
+EOF
+
+_run 'subshell isolates directory change'
+_check_prog subshell_test sh <<'EOF'
+#!/bin/sh
+#include "subshell.sh"
+mkdir sub
+cd sub
+subshell cd /
+basename "$(pwd)"
+EOF
+
+_run 'do_subshell isolates directory change'
+_check_prog do_subshell_test sh <<'EOF'
+#!/bin/sh
+#include "do_subshell.sh"
+do_cd() { cd "$1"; }
+mkdir do_sub
+cd do_sub
+do_subshell cd /
+basename "$(pwd)"
+EOF
+
+_run 'group keeps directory change'
+_check_prog group_test sh <<'EOF'
+#!/bin/sh
+#include "group.sh"
+mkdir grouped
+group cd grouped
+basename "$(pwd)"
+EOF
+
+_run 'do_group keeps directory change'
+_check_prog do_group_test sh <<'EOF'
+#!/bin/sh
+#include "do_group.sh"
+do_cd() { cd "$1"; }
+mkdir do_grouped
+do_group cd do_grouped
+basename "$(pwd)"
+EOF
+
+_run 'and_with runs second command if first succeeds'
+_check_prog and_with_ok sh <<'EOF'
+#!/bin/sh
+#include "and_with.sh"
+#include "do_.sh"
+do_true() { true; }
+do_echo() { printf '%s\n' "$*"; }
+and_with do_ :: true :: echo ok
+EOF
+
+_run 'and_with skips second command if first fails'
+_check_prog and_with_fail sh <<'EOF'
+#!/bin/sh
+#include "and_with.sh"
+#include "do_.sh"
+do_false() { echo no; false; }
+do_echo() { printf '%s\n' "$*"; }
+and_with do_ :: false :: echo should-not-run
+EOF
+
+_run 'do_and runs second command if first succeeds'
+_check_prog do_and_ok sh <<'EOF'
+#!/bin/sh
+#include "do_and.sh"
+do_true() { true; }
+do_echo() { printf '%s\n' "$*"; }
+do_and :: true :: echo ok
+EOF
+
+_run 'do_and via do_ dispatch'
+_check_prog do_and_dispatch sh <<'EOF'
+#!/bin/sh
+#include "do_.sh"
+#include "do_and.sh"
+do_true() { true; }
+do_echo() { printf '%s\n' "$*"; }
+do_ and :: true :: echo dispatched
+EOF
+
+_run 'or_with runs second command if first fails'
+_check_prog or_with_fail sh <<'EOF'
+#!/bin/sh
+#include "or_with.sh"
+#include "do_.sh"
+do_false() { echo no; false; }
+do_echo() { printf '%s\n' "$*"; }
+or_with do_ :: false :: echo ok
+EOF
+
+_run 'or_with skips second command if first succeeds'
+_check_prog or_with_ok sh <<'EOF'
+#!/bin/sh
+#include "or_with.sh"
+#include "do_.sh"
+do_true() { echo yes; true; }
+do_echo() { printf '%s\n' "$*"; }
+or_with do_ :: true :: echo should-not-run
+EOF
+
+_run 'do_or runs second command if first fails'
+_check_prog do_or_fail sh <<'EOF'
+#!/bin/sh
+#include "do_or.sh"
+do_false() { echo no; false; }
+do_echo() { printf '%s\n' "$*"; }
+do_or :: false :: echo ok
+EOF
+
+_run 'do_or via do_ dispatch'
+_check_prog do_or_dispatch sh <<'EOF'
+#!/bin/sh
+#include "do_.sh"
+#include "do_or.sh"
+do_false() { echo no; false; }
+do_echo() { printf '%s\n' "$*"; }
+do_ or :: false :: echo dispatched
+EOF
+
+_run 'sequence_with runs both commands'
+_check_prog sequence_with_test sh <<'EOF'
+#!/bin/sh
+#include "sequence_with.sh"
+#include "do_.sh"
+do_echo() { printf '%s\n' "$*"; }
+sequence_with do_ :: echo one :: echo two
+EOF
+
+_run 'sequence_with runs second command after first fails'
+_check_prog sequence_with_fail sh <<'EOF'
+#!/bin/sh
+#include "sequence_with.sh"
+#include "do_.sh"
+do_false() { echo no; false; }
+do_echo() { printf '%s\n' "$*"; }
+sequence_with do_ :: false :: echo ok
+EOF
+
+_run 'do_sequence runs both commands'
+_check_prog do_sequence_test sh <<'EOF'
+#!/bin/sh
+#include "do_sequence.sh"
+do_echo() { printf '%s\n' "$*"; }
+do_sequence :: echo one :: echo two
+EOF
+
+_run 'do_sequence via do_ dispatch'
+_check_prog do_sequence_dispatch sh <<'EOF'
+#!/bin/sh
+#include "do_.sh"
+#include "do_sequence.sh"
+do_echo() { printf '%s\n' "$*"; }
+do_ sequence :: echo dispatched
+EOF
+
 _run 'pipewith with do_ works'
 _check_prog pipewith_do sh <<'EOF'
 #!/bin/sh
-#include "pipewith.sh"
+#include "pipe_with.sh"
 #include "do_.sh"
 do_echo() { printf '%s\n' "$*"; }
 do_sed() { sed "$@"; }
-pipewith do_ :: echo "hereur" :: sed 's/^/thereugo\n/'
+pipe_with do_ :: echo "hereur" :: sed 's/^/thereugo\n/'
 EOF
 
 _run 'pipewith with do_run works'
 _check_prog pipewith_do_run sh <<'EOF'
 #!/bin/sh
-#include "pipewith.sh"
+#include "pipe_with.sh"
 #include "do_.sh"
 #include "do_run.sh"
 do_echo() { printf '%s\n' "$*"; }
 do_tr() { tr "$@"; }
-pipewith do_ :: echo "hereur" :: run sed 's/^/thereugo\n/' :: tr '[a-z]' '[A-Z]'
+pipe_with do_ :: echo "hereur" :: run sed 's/^/thereugo\n/' :: tr '[a-z]' '[A-Z]'
 EOF
 
 _run 'pipewith with do_xrun works'
 _check_prog pipewith_do_xrun sh <<'EOF'
 #!/bin/sh
-#include "pipewith.sh"
+#include "pipe_with.sh"
 #include "do_.sh"
 #include "do_xrun.sh"
 do_echos() { printf '%s\n' "$@"; }
 do_tr() { tr "$@"; }
-pipewith do_ :: echos "hereur" "thereugo" :: xrun -L1 sh -c 'printf "%s\n" "$*"' xrun "X:" :: tr '[a-z]' '[A-Z]'
+pipe_with do_ :: echos "hereur" "thereugo" :: xrun -L1 sh -c 'printf "%s\n" "$*"' xrun "X:" :: tr '[a-z]' '[A-Z]'
 EOF
 
 _run 'pipewith with single command (with separator)'
 _check_prog pipewith_single sh <<'EOF'
 #!/bin/sh
-#include "pipewith.sh"
+#include "pipe_with.sh"
 doit() {
   "$@"
 }
-pipewith doit '|' echo "no pipe here"
+pipe_with doit '|' echo "no pipe here"
 EOF
 
 _run 'pipewith with single command (without separator)'
 _check_prog pipewith_single sh <<'EOF'
 #!/bin/sh
-#include "pipewith.sh"
+#include "pipe_with.sh"
 doit() {
   "$@"
 }
-pipewith doit '' echo "no pipe here"
+pipe_with doit '' echo "no pipe here"
 EOF
 
 _run 'pipewith pipes two commands'
 _check_prog pipewith_simple sh <<'EOF'
 #!/bin/sh
-#include "pipewith.sh"
+#include "pipe_with.sh"
 doit() {
   "$@"
 }
-pipewith doit '|' echo 'hello world' '|' sed 's/^h/H/'
+pipe_with doit '|' echo 'hello world' '|' sed 's/^h/H/'
 EOF
 
 _run 'pipewith chains multiple commands'
 _check_prog pipewith_multi sh <<'EOF'
 #!/bin/sh
-#include "pipewith.sh"
+#include "pipe_with.sh"
 doit() {
   "$@"
 }
-pipewith doit :: printf '%s\n' line3 line2 line1 :: sort :: head -n 1
+pipe_with doit :: printf '%s\n' line3 line2 line1 :: sort :: head -n 1
 EOF
 
 _run 'pipeline with single command (with separator)'
@@ -752,23 +1194,25 @@ _check_prog do_pipeline_dispatch sh <<'EOF'
 do_ pipeline :: echo "dispatched"
 EOF
 
-_run 'pipe pipes two do_ functions'
+_run 'pipe_with do_ pipes two do_ functions'
 _check_prog pipe_simple sh <<'EOF'
 #!/bin/sh
-#include "pipe.sh"
+#include "pipe_with.sh"
+#include "do_.sh"
 do_echo() { printf '%s\n' "$*"; }
 do_sed() { sed "$@"; }
-pipe :: echo "hello world" :: sed 's/^h/H/'
+pipe_with do_ :: echo "hello world" :: sed 's/^h/H/'
 EOF
 
-_run 'pipe chains multiple do_ functions'
+_run 'pipe_with do_ chains multiple do_ functions'
 _check_prog pipe_multi sh <<'EOF'
 #!/bin/sh
-#include "pipe.sh"
+#include "pipe_with.sh"
+#include "do_.sh"
 do_lines() { printf '%s\n' "$@"; }
 do_sort() { sort; }
 do_head() { head "$@"; }
-pipe :: lines line3 line2 line1 :: sort :: head -n 1
+pipe_with do_ :: lines line3 line2 line1 :: sort :: head -n 1
 EOF
 
 _run 'do_pipe pipes two do_ functions'
