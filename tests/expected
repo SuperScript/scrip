@@ -610,9 +610,6 @@ hereur
 
 .../bin/pipeline
 
-  run prog
-    Execute prog
- 
   pipeline sep prog [sep prog ...]
  
 .../bin/scrip
@@ -658,7 +655,7 @@ hereur
 
 ==== bin/scrip make emits Makefile rule ====
 
-bin/pipeline: bin/scrip src/pipeline .../share/scrip/pipeline.sh .../share/scrip/pipe_with.sh .../share/scrip/do_run.sh .../share/scrip/usage.sh .../share/scrip/shout.sh
+bin/pipeline: bin/scrip src/pipeline .../share/scrip/pipeline.sh .../share/scrip/pipe_with.sh .../share/scrip/usage.sh .../share/scrip/shout.sh
 	bin/scrip prog bin/pipeline src/pipeline
 
 0
